@@ -36,7 +36,7 @@ export default function HeroProducts() {
     return (
       <div className="grid grid-cols-2 gap-4 px-2">
         {mobileProducts.map((product, i) => (
-          <Link key={product.id} to={`/product/${product.id}`} className="no-underline">
+          <Link key={product.id} to={`/product/${product.slug || product.id}`} className="no-underline">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -91,7 +91,7 @@ export default function HeroProducts() {
             damping: 12,
           }}
         >
-          <Link to={`/product/${product.id}`} className="no-underline">
+          <Link to={`/product/${product.slug || product.id}`} className="no-underline">
             <motion.div
               animate={{
                 y: [0, product.floatY, 0],

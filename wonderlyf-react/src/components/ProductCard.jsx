@@ -19,7 +19,7 @@ export default function ProductCard({ product, index = 0 }) {
     // Variable products need a variation chosen before they can be added
     // to the cart — send the user to the detail page to pick a size.
     if (isVariable) {
-      navigate(`/product/${product.id}`);
+      navigate(`/product/${product.slug || product.id}`);
       return;
     }
     addItem(product, 1, product.weight, product.price);

@@ -140,9 +140,21 @@ add_action( 'wp_loaded', function () {
         $vid = absint( $item['variation_id'] ?? 0 );
         if ( ! $id ) continue;
 
+        // If this is a variable product but no variation was sent (common
+        // when the user adds from a card before variations have loaded),
+        // fall back to the first available variation so the order succeeds.
+        if ( ! $vid ) {
+            $product = wc_get_product( $id );
+            if ( $product && $product->is_type( 'variable' ) ) {
+                $available = $product->get_available_variations();
+                if ( ! empty( $available[0]['variation_id'] ) ) {
+                    $vid = absint( $available[0]['variation_id'] );
+                }
+            }
+        }
+
         $variation = [];
         if ( $vid ) {
-            // Auto-fill variation attributes so WC accepts the add_to_cart call.
             $variation = wc_get_product_variation_attributes( $vid );
         }
         WC()->cart->add_to_cart( $id, $qty, $vid, $variation );

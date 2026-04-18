@@ -11,8 +11,11 @@ export default function ProductDetail() {
   const { id } = useParams();
   const { products } = useWooProducts();
   const { product: fetched, loading } = useWooProduct(id);
-  const product = fetched || products.find((p) => String(p.id) === id);
-  const cleanId = id; // URL param is already the clean numeric id
+  // URL can be either a numeric id or a slug — match either
+  const product = fetched || products.find(
+    (p) => String(p.id) === id || p.slug === id
+  );
+  const productUrlSegment = product?.slug || id;
   const { addItem } = useCart();
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -82,7 +85,7 @@ export default function ProductDetail() {
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: "https://wonderlyf.co.uk/" },
         { "@type": "ListItem", position: 2, name: "Shop", item: "https://wonderlyf.co.uk/shop" },
-        { "@type": "ListItem", position: 3, name: product.name, item: `https://wonderlyf.co.uk/product/${cleanId}` },
+        { "@type": "ListItem", position: 3, name: product.name, item: `https://wonderlyf.co.uk/product/${productUrlSegment}` },
       ],
     },
   ];
@@ -93,7 +96,7 @@ export default function ProductDetail() {
         title={`${product.name} | Buy Online UK`}
         description={`Buy ${product.name} online in the UK. ${product.description} From £${product.variants?.[0]?.price ?? product.price}. Free UK delivery over £30. 100% natural, FSSAI certified.`}
         keywords={`${product.name} UK, buy ${product.name} online, ${product.category} UK, Indian ${product.category.toLowerCase()} UK, Wonderlyf ${product.name}`}
-        canonical={`/product/${cleanId}`}
+        canonical={`/product/${productUrlSegment}`}
         ogImage={product.image.startsWith("/") ? `https://wonderlyf.co.uk${product.image}` : product.image}
         ogType="product"
         structuredData={productSchema}
@@ -233,17 +236,21 @@ export default function ProductDetail() {
                 </button>
               </div>
               <button
+                disabled={product.productType === "variable" && (!product.variants || product.variants.length === 0)}
                 onClick={() => {
                   addItem(product, quantity, activeVariant?.weight || product.weight, currentPrice);
                   setAdded(true);
                   setTimeout(() => setAdded(false), 1500);
                 }}
-                className={`flex-1 flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3.5 rounded-full font-bold transition-all duration-300 text-base ${
+                className={`flex-1 flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3.5 rounded-full font-bold transition-all duration-300 text-base disabled:opacity-60 disabled:cursor-not-allowed ${
                   added ? "bg-green-500 text-white" : "bg-honey hover:bg-honey-dark text-white"
                 }`}
               >
                 {added ? <Check size={16} /> : <ShoppingCart size={16} />}
-                {added ? "Added to Cart!" : `Add to Cart — £${currentPrice * quantity}`}
+                {added ? "Added to Cart!"
+                  : (product.productType === "variable" && (!product.variants || product.variants.length === 0))
+                  ? "Loading options…"
+                  : `Add to Cart — £${currentPrice * quantity}`}
               </button>
             </div>
 

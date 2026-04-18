@@ -33,12 +33,12 @@ export default function Cart() {
             <div className="md:col-span-2 space-y-4">
               {cart.map((item, i) => (
                 <motion.div key={item.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-white rounded-2xl p-4 flex gap-4 border border-honey/10 shadow-warm">
-                  <Link to={`/product/${item.id}`} className="flex-shrink-0">
+                  <Link to={`/product/${item.slug || item.id}`} className="flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-20 h-20 rounded-xl object-contain bg-cream p-2" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <p className="text-honey text-xs font-medium">{item.category}</p>
-                    <Link to={`/product/${item.id}`} className="no-underline">
+                    <Link to={`/product/${item.slug || item.id}`} className="no-underline">
                       <h3 className="text-warm-brown font-semibold">{item.name}</h3>
                     </Link>
                     <p className="text-warm-light text-xs">{item.selectedWeight}</p>
