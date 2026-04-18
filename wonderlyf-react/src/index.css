@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #FFF9F0;
+  color: #2C1810;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF9F0;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 148, 10, 0.3);
+  border-radius: 4px;
+}
+
+/* Warm card style (replaces glass) */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 148, 10, 0.1);
+  box-shadow: 0 2px 16px rgba(44, 24, 16, 0.04);
+}
+
+.card-warm {
+  background: #fff;
+  border: 1px solid rgba(212, 148, 10, 0.1);
+  box-shadow: 0 4px 20px rgba(44, 24, 16, 0.05);
+}
+
+.honey-text {
+  background: linear-gradient(135deg, #D4940A 0%, #8B6914 40%, #F0C14B 60%, #B8860B 100%);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.honey-text-shimmer {
+  background: linear-gradient(90deg, #D4940A, #F0C14B, #D4940A, #8B6914, #D4940A);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -300%; }
+  100% { background-position: 300%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.perspective-800 {
+  perspective: 800px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Smooth section divider wave */
+.section-wave {
+  position: relative;
+}
+.section-wave::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,20 C240,40 480,0 720,20 C960,40 1200,0 1440,20 L1440,40 L0,40 Z' fill='%23FFF9F0'/%3E%3C/svg%3E") no-repeat;
+  background-size: cover;
+  z-index: 2;
+}
+
+/* Animated underline on hover */
+.hover-underline {
+  position: relative;
+  display: inline-block;
+}
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #D4940A, #F0C14B);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* Honey bubble animation */
+@keyframes bubble-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(-80px) scale(0.4); opacity: 0; }
+}
+
+/* Gentle pulse for CTAs */
+@keyframes gentle-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 148, 10, 0.3); }
+  50% { box-shadow: 0 0 0 12px rgba(212, 148, 10, 0); }
+}
+.cta-pulse {
+  animation: gentle-pulse 3s ease-in-out infinite;
+}

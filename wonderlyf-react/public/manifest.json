@@ -1,0 +1,16 @@
+{
+  "name": "Wonderlyf UK - Traditional Indian Wellness Products",
+  "short_name": "Wonderlyf",
+  "description": "Shop authentic Indian wellness products, honey, traditional food and herbal remedies. Free UK delivery over £30.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDF8F0",
+  "theme_color": "#D4940A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

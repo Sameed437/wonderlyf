@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wonderlyf – Heritage Crafted Excellence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Lenis (multiple fallbacks) -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>if(typeof Lenis==='undefined'){document.write('<script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"><\/script>')}</script>
+<script>if(typeof Lenis==='undefined'){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.14/lenis.min.js"><\/script>')}</script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- SplitType -->
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --indigo:#2D2D7B;--indigo-light:#3C3D99;--indigo-dark:#1A1A5E;
+  --honey:#E6A817;--honey-light:#F5CC5C;--honey-dark:#B8860B;
+  --gold:#C8A951;--gold-light:#E8D48B;
+  --cream:#FFF8EE;--cream-dark:#F5EDDE;
+  --sage:#7B9E6B;--terracotta:#C47D5A;
+  --dark:#0a0a1a;--text:#1E1E3A;--text-mid:#4A4A6A;--text-light:#7A7A9A;
+  --white:#fff;
+  --px:20px;
+}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:'DM Sans',sans-serif;color:var(--text);background:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.1}
+a{text-decoration:none;color:inherit}
+[text-split]{opacity:0}
+
+/* ===== PRELOADER ===== */
+.preloader{position:fixed;inset:0;z-index:100000;background:var(--dark);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.pre-count{font-family:'DM Sans',sans-serif;font-size:80px;font-weight:700;color:var(--honey);line-height:1}
+.pre-text{font-family:'Caveat',cursive;font-size:20px;color:rgba(255,255,255,.25);margin-top:8px}
+.pre-bar{width:200px;height:2px;background:rgba(255,255,255,.06);margin-top:30px;border-radius:2px;overflow:hidden}
+.pre-fill{width:0%;height:100%;background:var(--honey);border-radius:2px}
+
+/* ===== MOBILE NAVBAR ===== */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px var(--px);display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+.navbar.scrolled{background:rgba(255,248,238,.96);backdrop-filter:blur(16px);box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--white);transition:color .4s}
+.navbar.scrolled .nav-logo{color:var(--indigo)}
+.nav-logo span{color:var(--honey)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-cart{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;position:relative;transition:background .4s}
+.navbar.scrolled .nav-cart{background:var(--indigo)}
+.nav-cart svg{width:18px;height:18px;stroke:white;fill:none;stroke-width:2}
+.nav-cart-badge{position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:var(--terracotta);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.hamburger{width:40px;height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:white;border-radius:2px;transition:all .3s}
+.navbar.scrolled .hamburger span{background:var(--text)}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;min-height:100svh;background:linear-gradient(170deg,var(--dark) 0%,#15153a 50%,var(--indigo-dark) 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 var(--px) 40px}
+.hero-grain{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none}
+
+/* 3D Canvas sits behind text */
+.hero-3d-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
+.hero-3d-canvas canvas{display:block;width:100%!important;height:100%!important}
+
+.hero-content{position:relative;z-index:3}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(230,168,23,.1);border:1px solid rgba(230,168,23,.18);border-radius:50px;font-size:11px;font-weight:600;color:var(--honey-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;opacity:0}
+.hero h1{font-size:44px;font-weight:700;color:var(--white);margin-bottom:16px}
+.hero h1 em{font-style:italic;color:var(--honey)}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:28px;max-width:340px;opacity:0}
+.hero-buttons{display:flex;gap:12px;margin-bottom:30px;opacity:0;flex-wrap:wrap}
+
+.btn-honey{display:inline-flex;align-items:center;gap:8px;padding:16px 28px;border:none;border-radius:50px;font-weight:700;font-size:15px;background:var(--honey);color:var(--dark);position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.btn-honey::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);transform:translateX(-100%);transition:transform .6s}
+.btn-honey:active::after{transform:translateX(100%)}
+
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:16px 24px;border:1.5px solid rgba(255,255,255,.15);border-radius:50px;font-weight:600;font-size:14px;color:rgba(255,255,255,.6);background:none;-webkit-tap-highlight-color:transparent}
+
+/* Hero scroll indicator */
+.scroll-hint{display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;padding-bottom:10px}
+.scroll-hint span{font-size:11px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:2px}
+.scroll-arrow{width:20px;height:30px;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;position:relative}
+.scroll-arrow::before{content:'';position:absolute;top:6px;left:50%;width:3px;height:8px;background:var(--honey);border-radius:3px;transform:translateX(-50%);animation:scrollBounce 1.5s infinite}
+
+/* ===== MARQUEE ===== */
+.marquee{padding:14px 0;background:var(--honey);overflow:hidden}
+.marquee-track{display:flex;animation:marqueeScroll 18s linear infinite;width:max-content}
+.marquee-item{display:flex;align-items:center;gap:14px;padding:0 20px;white-space:nowrap;font-size:13px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.5px}
+.marquee-item .dot{width:5px;height:5px;background:var(--dark);border-radius:50%;opacity:.3}
+
+/* ===== 3D PRODUCT SHOWCASE ===== */
+.product-3d-section{padding:80px var(--px);background:var(--dark);position:relative;overflow:hidden}
+.product-3d-section .sec-header{text-align:center;margin-bottom:40px}
+.product-3d-section .sec-tag{font-size:11px;font-weight:600;color:var(--honey);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.product-3d-section .sec-tag::before,.product-3d-section .sec-tag::after{content:'';width:20px;height:1px;background:var(--honey)}
+.product-3d-section h2{font-size:32px;color:var(--white);margin-bottom:10px}
+.product-3d-section p.sub{font-size:14px;color:rgba(255,255,255,.35)}
+
+/* 3D product carousel */
+.product-3d-carousel{position:relative;height:420px;margin-bottom:30px}
+.product-3d-canvas{position:absolute;inset:0}
+.product-3d-canvas canvas{display:block;width:100%!important;height:100%!important}
+
+/* Product info overlay */
+.p3d-info{position:relative;text-align:center;z-index:5}
+.p3d-name{font-size:26px;font-weight:700;color:var(--white);margin-bottom:4px}
+.p3d-category{font-family:'Caveat',cursive;font-size:18px;color:var(--honey-light);margin-bottom:10px}
+.p3d-price{font-size:28px;font-weight:800;color:var(--honey);font-family:'DM Sans',sans-serif;margin-bottom:20px}
+.p3d-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+.p3d-tag{padding:6px 14px;background:rgba(230,168,23,.1);border:1px solid rgba(230,168,23,.15);border-radius:50px;font-size:12px;color:var(--honey-light);font-weight:500}
+.p3d-dots{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
+.p3d-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .4s}
+.p3d-dot.active{width:24px;border-radius:4px;background:var(--honey)}
+.p3d-nav{display:flex;gap:12px;justify-content:center}
+.p3d-nav button{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);background:none;color:white;font-size:20px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:all .3s}
+.p3d-nav button:active{background:var(--honey);border-color:var(--honey);color:var(--dark)}
+
+/* ===== PRODUCT GRID ===== */
+.products-section{padding:80px var(--px);background:var(--cream)}
+.sec-header{margin-bottom:40px}
+.sec-tag{font-size:11px;font-weight:600;color:var(--honey-dark);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-tag::before{content:'';width:24px;height:2px;background:var(--honey)}
+.sec-header h2{font-size:30px;color:var(--text)}
+.sec-header p.sub{font-size:14px;color:var(--text-mid);margin-top:8px}
+
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.product-card{border-radius:16px;overflow:hidden;background:var(--white);-webkit-tap-highlight-color:transparent;position:relative}
+.p-card-img{position:relative;aspect-ratio:1;overflow:hidden}
+.p-card-img-inner{position:absolute;inset:-10%;display:flex;align-items:center;justify-content:center;font-size:56px;will-change:transform}
+.p-bg-1{background:linear-gradient(135deg,#FFF5E0,#FFE8B5)}.p-bg-2{background:linear-gradient(135deg,#E8F0E0,#D0E4C0)}
+.p-bg-3{background:linear-gradient(135deg,#F0E8E0,#E4D0C0)}.p-bg-4{background:linear-gradient(135deg,#E0E8F0,#C0D0E4)}
+.p-bg-5{background:linear-gradient(135deg,#F5F0D8,#E8E0B8)}.p-bg-6{background:linear-gradient(135deg,#E0F0E8,#C0E4D0)}
+
+/* Honey SVG drip on card */
+.p-honey-drip{position:absolute;top:-2px;left:0;right:0;z-index:3;pointer-events:none}
+.p-honey-drip svg{width:100%;height:auto;transform:scaleY(0);transform-origin:top;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+
+/* Floating ingredients */
+.p-ings{position:absolute;inset:0;pointer-events:none;z-index:4}
+.p-ing{position:absolute;font-size:18px;opacity:0;transform:scale(0) rotate(-180deg);transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.p-ing-1{top:12%;left:8%;transition-delay:0s}.p-ing-2{top:8%;right:10%;transition-delay:.08s}
+.p-ing-3{bottom:18%;left:6%;transition-delay:.16s}.p-ing-4{bottom:12%;right:8%;transition-delay:.12s}
+
+/* Tag */
+.p-card-tag{position:absolute;top:10px;left:10px;z-index:5;padding:4px 10px;border-radius:50px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.tag-best{background:var(--honey);color:var(--dark)}.tag-new{background:var(--sage);color:white}
+.tag-organic{background:var(--terracotta);color:white}.tag-pure{background:var(--indigo-light);color:white}
+
+.p-card-info{padding:14px}
+.p-card-cat{font-size:10px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.p-card-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
+.p-card-price{display:flex;align-items:baseline;gap:4px}
+.p-card-price .amt{font-size:17px;font-weight:800;color:var(--indigo)}
+.p-card-price .range{font-size:11px;color:var(--text-light)}
+
+/* ===== SWIPEABLE PRODUCT STORIES ===== */
+.stories-section{padding:60px 0 80px;background:var(--white);overflow:hidden}
+.stories-section .sec-header{padding:0 var(--px);margin-bottom:24px}
+.stories-track{display:flex;gap:16px;padding:0 var(--px);overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+.stories-track::-webkit-scrollbar{display:none}
+.story-card{min-width:280px;flex-shrink:0;scroll-snap-align:start;border-radius:20px;overflow:hidden;position:relative;aspect-ratio:9/16;background:var(--dark)}
+.story-card-3d{position:absolute;inset:0}
+.story-card-3d canvas{width:100%!important;height:100%!important;display:block}
+.story-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(10,10,26,.85) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:24px;z-index:2}
+.story-card-overlay .scat{font-size:10px;color:var(--honey);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+.story-card-overlay h3{font-size:22px;color:var(--white);margin-bottom:6px}
+.story-card-overlay .sprice{font-size:20px;font-weight:800;color:var(--honey)}
+.story-card-overlay .sdesc{font-size:13px;color:rgba(255,255,255,.4);margin-top:8px;line-height:1.5}
+
+/* ===== PROCESS ===== */
+.process-section{padding:80px var(--px);background:var(--cream)}
+.process-steps{display:flex;flex-direction:column;gap:0;position:relative;padding-left:36px}
+.process-steps::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:rgba(230,168,23,.15)}
+.process-line-fill{position:absolute;left:14px;top:0;width:2px;height:0;background:var(--honey);z-index:1;transition:height 1.5s ease}
+.process-step{position:relative;padding:24px 0;opacity:0;transform:translateX(20px)}
+.step-dot{position:absolute;left:-36px;top:28px;width:30px;height:30px;border-radius:50%;background:var(--white);border:2.5px solid var(--honey);display:flex;align-items:center;justify-content:center;font-size:14px;z-index:2;transition:all .4s}
+.process-step h4{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;margin-bottom:4px}
+.process-step p{font-size:13px;color:var(--text-light);line-height:1.5}
+
+/* ===== ABOUT ===== */
+.about-section{padding:80px var(--px);background:var(--white)}
+.about-visual{width:100%;aspect-ratio:4/3;border-radius:20px;overflow:hidden;position:relative;margin-bottom:32px}
+.about-3d-canvas{position:absolute;inset:0}
+.about-3d-canvas canvas{width:100%!important;height:100%!important;display:block}
+.about-accent{position:absolute;bottom:16px;right:16px;background:var(--honey);border-radius:16px;padding:16px 20px;text-align:center;box-shadow:0 8px 30px rgba(230,168,23,.3);z-index:3}
+.about-accent h3{font-family:'DM Sans',sans-serif;font-size:36px;font-weight:800;color:var(--dark);line-height:1}
+.about-accent p{font-size:11px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:1px}
+.about-tag{font-size:11px;font-weight:600;color:var(--honey-dark);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.about-tag::before{content:'';width:20px;height:2px;background:var(--honey)}
+.about-section h2{font-size:30px;color:var(--text);margin-bottom:16px}
+.about-section h2 em{color:var(--indigo);font-style:italic}
+.about-lead{font-size:15px;color:var(--text-mid);line-height:1.7;margin-bottom:28px}
+.about-feats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.about-feat{display:flex;align-items:center;gap:10px;padding:14px;background:var(--cream);border-radius:14px;transition:transform .3s}
+.about-feat:active{transform:scale(.97)}
+.about-feat-icon{font-size:22px;width:40px;height:40px;background:var(--indigo);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.about-feat h4{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700}
+.about-feat p{font-size:11px;color:var(--text-light)}
+
+/* ===== STATS ===== */
+.stats-section{padding:50px var(--px);background:var(--honey);position:relative;overflow:hidden}
+.stats-section::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 3L37 13V27L20 37L3 27V13z' fill='none' stroke='rgba(0,0,0,.04)' stroke-width='1'/%3E%3C/svg%3E")}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;position:relative}
+.stat-item{text-align:center}
+.stat-num{font-family:'DM Sans',sans-serif;font-size:44px;font-weight:800;color:var(--dark);line-height:1}
+.stat-label{font-size:11px;font-weight:600;color:rgba(0,0,0,.4);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials-section{padding:80px 0;background:var(--cream);overflow:hidden}
+.testimonials-section .sec-header{padding:0 var(--px);margin-bottom:24px}
+.testimonial-track{display:flex;gap:16px;padding:0 var(--px);overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.testimonial-track::-webkit-scrollbar{display:none}
+.testimonial-card{min-width:calc(100vw - 60px);flex-shrink:0;scroll-snap-align:center;background:var(--white);border-radius:20px;padding:28px;border:1px solid rgba(230,168,23,.08)}
+.t-quote{font-size:36px;color:var(--honey);font-family:'Playfair Display',serif;line-height:1}
+.t-stars{color:var(--honey);font-size:14px;letter-spacing:2px;margin:8px 0 12px}
+.t-text{font-size:15px;color:var(--text-mid);line-height:1.7;font-style:italic;margin-bottom:20px}
+.t-author{display:flex;align-items:center;gap:12px}
+.t-avatar{width:40px;height:40px;border-radius:50%;background:var(--indigo-light);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:16px}
+.t-author h4{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700}
+.t-author p{font-size:12px;color:var(--text-light)}
+
+/* ===== CTA ===== */
+.cta-section{padding:80px var(--px);background:var(--dark);position:relative;overflow:hidden;text-align:center}
+.cta-section::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(230,168,23,.1),transparent 70%);border-radius:50%}
+.cta-section h2{font-size:32px;color:var(--white);margin-bottom:14px;position:relative}
+.cta-section h2 em{color:var(--honey);font-style:italic}
+.cta-section p{font-size:15px;color:rgba(255,255,255,.35);margin-bottom:32px;position:relative}
+.cta-buttons{display:flex;flex-direction:column;gap:12px;position:relative}
+
+/* ===== FOOTER ===== */
+.footer{padding:60px var(--px) 30px;background:#060612;color:rgba(255,255,255,.4)}
+.f-logo{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:white;margin-bottom:12px}
+.f-logo span{color:var(--honey)}
+.footer>p{font-size:14px;line-height:1.7;margin-bottom:32px;max-width:300px}
+.f-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:32px}
+.f-col h4{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+.f-col ul{list-style:none}.f-col li{margin-bottom:10px}
+.f-col a{font-size:14px;transition:color .3s}.f-col a:hover{color:var(--honey)}
+.f-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.05);font-size:12px;text-align:center}
+
+/* ===== KEYFRAMES ===== */
+@keyframes marqueeScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0);opacity:1}50%{transform:translateX(-50%) translateY(8px);opacity:.3}}
+@keyframes glowPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.8;transform:scale(1.2)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ===== DESKTOP OVERRIDE ===== */
+@media(min-width:768px){
+  :root{--px:40px}
+  .hero h1{font-size:56px}
+  .product-grid{grid-template-columns:repeat(3,1fr);gap:24px}
+  .story-card{min-width:320px}
+  .testimonial-card{min-width:360px}
+  .stats-grid{grid-template-columns:repeat(4,1fr)}
+  .about-feats{gap:16px}
+  .f-cols{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="pre-count" id="preCount">0</div>
+  <div class="pre-text">Loading wonders...</div>
+  <div class="pre-bar"><div class="pre-fill" id="preFill"></div></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="#">Wonder<span>lyf</span></a>
+  <div class="nav-right">
+    <div class="nav-cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav-cart-badge">3</span>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO WITH 3D PRODUCT -->
+<section class="hero" id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-3d-canvas" id="hero3d"></div>
+  <div class="hero-content">
+    <div class="hero-tag">🍯 Heritage Crafted</div>
+    <h1 text-split words-slide-up>Nature's<br>Purest <em>Wonders</em></h1>
+    <p class="hero-desc">Handcrafted food & wellness products. Traditional recipes, zero preservatives, delivered fresh.</p>
+    <div class="hero-buttons">
+      <button class="btn-honey">Explore Products →</button>
+      <button class="btn-ghost">Our Story</button>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="marquee">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="dot"></span>100% Natural</div>
+    <div class="marquee-item"><span class="dot"></span>Homemade</div>
+    <div class="marquee-item"><span class="dot"></span>No Preservatives</div>
+    <div class="marquee-item"><span class="dot"></span>Village Fresh</div>
+    <div class="marquee-item"><span class="dot"></span>Women Led</div>
+    <div class="marquee-item"><span class="dot"></span>Traditional</div>
+    <div class="marquee-item"><span class="dot"></span>100% Natural</div>
+    <div class="marquee-item"><span class="dot"></span>Homemade</div>
+    <div class="marquee-item"><span class="dot"></span>No Preservatives</div>
+    <div class="marquee-item"><span class="dot"></span>Village Fresh</div>
+    <div class="marquee-item"><span class="dot"></span>Women Led</div>
+    <div class="marquee-item"><span class="dot"></span>Traditional</div>
+  </div>
+</section>
+
+<!-- 3D PRODUCT SHOWCASE -->
+<section class="product-3d-section" id="product3d">
+  <div class="sec-header" style="text-align:center">
+    <div class="sec-tag" style="justify-content:center;color:var(--honey)"><span>Star Products</span></div>
+    <h2 text-split words-slide-up style="color:var(--white)">Spin. Explore. Love.</h2>
+    <p class="sub" style="color:rgba(255,255,255,.35)">Swipe to browse — tap to explore</p>
+  </div>
+  <div class="product-3d-carousel">
+    <div class="product-3d-canvas" id="productCarousel3d"></div>
+  </div>
+  <div class="p3d-info">
+    <div class="p3d-name" id="p3dName">Keshkalpa Herbal Oil</div>
+    <div class="p3d-category" id="p3dCat">Nature's Gold</div>
+    <div class="p3d-price" id="p3dPrice">₹450</div>
+    <div class="p3d-tags" id="p3dTags">
+      <span class="p3d-tag">🌿 Bhringraj</span>
+      <span class="p3d-tag">🥥 Coconut</span>
+      <span class="p3d-tag">🌺 Hibiscus</span>
+    </div>
+    <div class="p3d-dots" id="p3dDots">
+      <span class="p3d-dot active"></span><span class="p3d-dot"></span><span class="p3d-dot"></span>
+      <span class="p3d-dot"></span><span class="p3d-dot"></span><span class="p3d-dot"></span>
+    </div>
+    <div class="p3d-nav">
+      <button id="p3dPrev">←</button>
+      <button class="btn-honey" style="border-radius:50px;padding:14px 28px;font-size:14px">Add to Cart</button>
+      <button id="p3dNext">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- SWIPEABLE PRODUCT STORIES WITH 3D -->
+<section class="stories-section" id="stories">
+  <div class="sec-header">
+    <div class="sec-tag">Swipe to Explore</div>
+    <h2 text-split words-slide-up>Product Stories</h2>
+  </div>
+  <div class="stories-track" id="storiesTrack">
+    <div class="story-card" data-color="0xFFE8B5"><div class="story-card-3d"></div><div class="story-card-overlay"><div class="scat">Healing Bowl</div><h3>Banana Stem Soup</h3><div class="sprice">₹285</div><div class="sdesc">Ancient recipe for gut health & detox</div></div></div>
+    <div class="story-card" data-color="0xD0E4C0"><div class="story-card-3d"></div><div class="story-card-overlay"><div class="scat">Grandma's Crunch</div><h3>Kambu Ladoo</h3><div class="sprice">₹270</div><div class="sdesc">Millet-based traditional sweet snack</div></div></div>
+    <div class="story-card" data-color="0xE4D0C0"><div class="story-card-3d"></div><div class="story-card-overlay"><div class="scat">Heritage Preserves</div><h3>Moringa Relish</h3><div class="sprice">₹230</div><div class="sdesc">Nutrient-rich superfood condiment</div></div></div>
+    <div class="story-card" data-color="0xC0D0E4"><div class="story-card-3d"></div><div class="story-card-overlay"><div class="scat">Traditional Delights</div><h3>Toor Dal</h3><div class="sprice">₹110</div><div class="sdesc">Stone-ground pure organic dal</div></div></div>
+  </div>
+</section>
+
+<!-- PRODUCT GRID -->
+<section class="products-section" id="products">
+  <div class="sec-header">
+    <div class="sec-tag">Featured</div>
+    <h2 text-split words-slide-up>Handpicked Treasures</h2>
+    <p class="sub">From village to your doorstep</p>
+  </div>
+  <div class="product-grid">
+    <div class="product-card"><div class="p-card-img"><div class="p-card-img-inner p-bg-1">🫘</div><div class="p-honey-drip"><svg viewBox="0 0 200 30" preserveAspectRatio="none"><path d="M0,0 L200,0 L200,10 C170,28 140,18 110,24 C80,30 50,15 20,20 C10,22 0,17 0,10Z" fill="#E6A817" opacity=".7"/></svg></div><div class="p-ings"><span class="p-ing p-ing-1">🌾</span><span class="p-ing p-ing-2">🌿</span><span class="p-ing p-ing-3">🍂</span><span class="p-ing p-ing-4">🫘</span></div><span class="p-card-tag tag-best">Best</span></div><div class="p-card-info"><div class="p-card-cat">Traditional</div><div class="p-card-name">Toor Dal</div><div class="p-card-price"><span class="amt">₹110</span><span class="range">– ₹375</span></div></div></div>
+    <div class="product-card"><div class="p-card-img"><div class="p-card-img-inner p-bg-2">🍪</div><div class="p-honey-drip"><svg viewBox="0 0 200 30" preserveAspectRatio="none"><path d="M0,0 L200,0 L200,10 C170,28 140,18 110,24 C80,30 50,15 20,20 C10,22 0,17 0,10Z" fill="#E6A817" opacity=".7"/></svg></div><div class="p-ings"><span class="p-ing p-ing-1">🌰</span><span class="p-ing p-ing-2">🥜</span><span class="p-ing p-ing-3">🍯</span><span class="p-ing p-ing-4">🌾</span></div><span class="p-card-tag tag-new">New</span></div><div class="p-card-info"><div class="p-card-cat">Grandma's</div><div class="p-card-name">Kambu Ladoo</div><div class="p-card-price"><span class="amt">₹270</span><span class="range">– ₹1,010</span></div></div></div>
+    <div class="product-card"><div class="p-card-img"><div class="p-card-img-inner p-bg-3">🌿</div><div class="p-honey-drip"><svg viewBox="0 0 200 30" preserveAspectRatio="none"><path d="M0,0 L200,0 L200,10 C170,28 140,18 110,24 C80,30 50,15 20,20 C10,22 0,17 0,10Z" fill="#E6A817" opacity=".7"/></svg></div><div class="p-ings"><span class="p-ing p-ing-1">🍃</span><span class="p-ing p-ing-2">🌶️</span><span class="p-ing p-ing-3">🧂</span><span class="p-ing p-ing-4">🫒</span></div><span class="p-card-tag tag-organic">Organic</span></div><div class="p-card-info"><div class="p-card-cat">Preserves</div><div class="p-card-name">Moringa Relish</div><div class="p-card-price"><span class="amt">₹230</span><span class="range">– ₹875</span></div></div></div>
+    <div class="product-card"><div class="p-card-img"><div class="p-card-img-inner p-bg-4">🧴</div><div class="p-honey-drip"><svg viewBox="0 0 200 30" preserveAspectRatio="none"><path d="M0,0 L200,0 L200,10 C170,28 140,18 110,24 C80,30 50,15 20,20 C10,22 0,17 0,10Z" fill="#E6A817" opacity=".7"/></svg></div><div class="p-ings"><span class="p-ing p-ing-1">🌺</span><span class="p-ing p-ing-2">🥥</span><span class="p-ing p-ing-3">🌱</span><span class="p-ing p-ing-4">🌿</span></div><span class="p-card-tag tag-pure">Pure</span></div><div class="p-card-info"><div class="p-card-cat">Nature's Gold</div><div class="p-card-name">Keshkalpa Oil</div><div class="p-card-price"><span class="amt">₹450</span><span class="range">– ₹38.5K</span></div></div></div>
+    <div class="product-card"><div class="p-card-img"><div class="p-card-img-inner p-bg-5">🍲</div><div class="p-honey-drip"><svg viewBox="0 0 200 30" preserveAspectRatio="none"><path d="M0,0 L200,0 L200,10 C170,28 140,18 110,24 C80,30 50,15 20,20 C10,22 0,17 0,10Z" fill="#E6A817" opacity=".7"/></svg></div><div class="p-ings"><span class="p-ing p-ing-1">🍌</span><span class="p-ing p-ing-2">🧅</span><span class="p-ing p-ing-3">🫚</span><span class="p-ing p-ing-4">🍃</span></div><span class="p-card-tag tag-new">New</span></div><div class="p-card-info"><div class="p-card-cat">Healing</div><div class="p-card-name">Banana Stem Soup</div><div class="p-card-price"><span class="amt">₹285</span><span class="range">– ₹2,650</span></div></div></div>
+    <div class="product-card"><div class="p-card-img"><div class="p-card-img-inner p-bg-6">🥬</div><div class="p-honey-drip"><svg viewBox="0 0 200 30" preserveAspectRatio="none"><path d="M0,0 L200,0 L200,10 C170,28 140,18 110,24 C80,30 50,15 20,20 C10,22 0,17 0,10Z" fill="#E6A817" opacity=".7"/></svg></div><div class="p-ings"><span class="p-ing p-ing-1">🌿</span><span class="p-ing p-ing-2">🧄</span><span class="p-ing p-ing-3">🫒</span><span class="p-ing p-ing-4">🌶️</span></div><span class="p-card-tag tag-organic">Organic</span></div><div class="p-card-info"><div class="p-card-cat">Preserves</div><div class="p-card-name">Mudakathan Thokku</div><div class="p-card-price"><span class="amt">₹290</span><span class="range">– ₹1,100</span></div></div></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="sec-header">
+    <div class="sec-tag">Our Process</div>
+    <h2 text-split words-slide-up>Village to Table</h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-line-fill" id="processLine"></div>
+    <div class="process-step"><div class="step-dot">🌾</div><h4>Handpicked Harvest</h4><p>Sourced from organic farms across rural India</p></div>
+    <div class="process-step"><div class="step-dot">👩‍🍳</div><h4>Artisan Crafted</h4><p>Traditional recipes by local women artisans</p></div>
+    <div class="process-step"><div class="step-dot">✅</div><h4>Purity Tested</h4><p>Every batch checked for quality & freshness</p></div>
+    <div class="process-step"><div class="step-dot">📦</div><h4>Delivered Fresh</h4><p>Packed with care, shipped fast across India</p></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-visual">
+    <div class="about-3d-canvas" id="about3d"></div>
+    <div class="about-accent"><h3>100%</h3><p>Natural</p></div>
+  </div>
+  <div class="about-tag">Our Story</div>
+  <h2 text-split words-slide-up>Reviving <em>Traditional</em> Goodness</h2>
+  <p class="about-lead">Wonderlyf began as a personal quest to revive simple, natural goodness. Partnering with local artisans, we bring authentic wellness crafted with love.</p>
+  <div class="about-feats">
+    <div class="about-feat"><div class="about-feat-icon">🌾</div><div><h4>Village Fresh</h4><p>Farm-to-table</p></div></div>
+    <div class="about-feat"><div class="about-feat-icon">✨</div><div><h4>Pure Quality</h4><p>No imitation</p></div></div>
+    <div class="about-feat"><div class="about-feat-icon">💪</div><div><h4>Wellness</h4><p>Healthy living</p></div></div>
+    <div class="about-feat"><div class="about-feat-icon">👩</div><div><h4>Women-Led</h4><p>Empowering</p></div></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section" id="stats">
+  <div class="stats-grid">
+    <div class="stat-item"><div class="stat-num" data-target="50">0</div><div class="stat-label">Products</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="2000">0</div><div class="stat-label">Customers</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="30">0</div><div class="stat-label">Artisans</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="100">0</div><div class="stat-label">% Natural</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials">
+  <div class="sec-header">
+    <div class="sec-tag">Customer Love</div>
+    <h2 text-split words-slide-up>What They Say</h2>
+  </div>
+  <div class="testimonial-track">
+    <div class="testimonial-card"><div class="t-quote">"</div><div class="t-stars">★★★★★</div><div class="t-text">The Moringa Relish tastes exactly like what my grandmother used to make. Pure, authentic, delicious!</div><div class="t-author"><div class="t-avatar">P</div><div><h4>Priya Menon</h4><p>Chennai</p></div></div></div>
+    <div class="testimonial-card"><div class="t-quote">"</div><div class="t-stars">★★★★★</div><div class="t-text">Keshkalpa Herbal Oil transformed my hair care routine. You can feel the difference with natural products!</div><div class="t-author"><div class="t-avatar">A</div><div><h4>Anjali Sharma</h4><p>Mumbai</p></div></div></div>
+    <div class="testimonial-card"><div class="t-quote">"</div><div class="t-stars">★★★★★</div><div class="t-text">Kambu Ladoos are a hit at home. My kids love them as a healthy snack. Purity over profit!</div><div class="t-author"><div class="t-avatar">R</div><div><h4>Ramesh Iyer</h4><p>Bengaluru</p></div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <h2 text-split words-slide-up>Taste the <em>Tradition</em></h2>
+  <p>Join thousands of families who trust our heritage-crafted products</p>
+  <div class="cta-buttons">
+    <button class="btn-honey" style="justify-content:center;width:100%">Shop All Products →</button>
+    <button class="btn-ghost" style="justify-content:center;width:100%">Contact Us</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="f-logo">Wonder<span>lyf</span></div>
+  <p>Bringing wonders to your life through authentic, nutritious products rooted in traditional wisdom.</p>
+  <div class="f-cols">
+    <div class="f-col"><h4>Shop</h4><ul><li><a href="#">All Products</a></li><li><a href="#">Healing Bowl</a></li><li><a href="#">Spice Blends</a></li></ul></div>
+    <div class="f-col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li><li><a href="#">Careers</a></li></ul></div>
+  </div>
+  <div class="f-bottom">© 2026 Wonderlyf Private Limited</div>
+</footer>
+
+<script>
+// ===== LENIS SMOOTH SCROLL (with fallback) =====
+gsap.registerPlugin(ScrollTrigger);
+try {
+  if (typeof Lenis !== 'undefined') {
+    const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.8, touchMultiplier: 1.5, smoothTouch: true });
+    function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+  }
+} catch(e) { console.warn('Lenis not available, using native scroll'); }
+gsap.ticker.lagSmoothing(0);
+
+// ===== PRELOADER =====
+const preTl = gsap.timeline({ onComplete: () => {
+  gsap.to('#preloader', { opacity: 0, duration: .5, onComplete: () => { document.getElementById('preloader').style.display = 'none'; initAll(); }});
+}});
+let cnt = { v: 0 };
+preTl.to('#preFill', { width: '100%', duration: 1.8, ease: 'power2.inOut' }, 0);
+preTl.to(cnt, { v: 100, duration: 1.8, ease: 'power2.inOut', onUpdate: () => { document.getElementById('preCount').textContent = Math.floor(cnt.v); }}, 0);
+
+// ===== THREE.JS — HERO 3D SCENE =====
+function createHero3D() {
+  const container = document.getElementById('hero3d');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 100);
+  camera.position.set(0, 0, 6);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+  scene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0xffd700, 1.2);
+  dirLight.position.set(3, 5, 4);
+  scene.add(dirLight);
+  const pointLight = new THREE.PointLight(0xe6a817, 0.8, 10);
+  pointLight.position.set(-2, 2, 3);
+  scene.add(pointLight);
+
+  // Create honey jar — cylinder body
+  const jarGeo = new THREE.CylinderGeometry(0.7, 0.8, 1.6, 32);
+  const jarMat = new THREE.MeshPhysicalMaterial({
+    color: 0xE6A817, metalness: 0.1, roughness: 0.2,
+    transmission: 0.4, thickness: 0.5, transparent: true, opacity: 0.85
+  });
+  const jar = new THREE.Mesh(jarGeo, jarMat);
+
+  // Jar cap
+  const capGeo = new THREE.CylinderGeometry(0.55, 0.6, 0.25, 32);
+  const capMat = new THREE.MeshStandardMaterial({ color: 0x6B5535, metalness: 0.3, roughness: 0.6 });
+  const cap = new THREE.Mesh(capGeo, capMat);
+  cap.position.y = 0.92;
+
+  // Jar label ring
+  const labelGeo = new THREE.CylinderGeometry(0.82, 0.82, 0.5, 32, 1, true);
+  const labelMat = new THREE.MeshStandardMaterial({ color: 0xFFF8EE, metalness: 0, roughness: 0.8, side: THREE.DoubleSide });
+  const label = new THREE.Mesh(labelGeo, labelMat);
+  label.position.y = -0.1;
+
+  const group = new THREE.Group();
+  group.add(jar, cap, label);
+  group.position.set(1.5, 0.5, 0);
+  group.rotation.y = -0.3;
+  scene.add(group);
+
+  // Floating spheres (ingredients)
+  const spheres = [];
+  const colors = [0x7B9E6B, 0xC47D5A, 0xE6A817, 0x3C3D99, 0xC8A951];
+  for (let i = 0; i < 12; i++) {
+    const geo = new THREE.SphereGeometry(0.08 + Math.random() * 0.12, 16, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: colors[i % colors.length], metalness: 0.2, roughness: 0.5 });
+    const sphere = new THREE.Mesh(geo, mat);
+    sphere.position.set((Math.random() - 0.5) * 5, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 3);
+    sphere.userData = { speed: 0.3 + Math.random() * 0.5, offset: Math.random() * Math.PI * 2 };
+    scene.add(sphere);
+    spheres.push(sphere);
+  }
+
+  let time = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.01;
+    group.rotation.y = Math.sin(time * 0.5) * 0.15 - 0.3;
+    group.position.y = 0.5 + Math.sin(time * 0.8) * 0.1;
+    spheres.forEach(s => {
+      s.position.y += Math.sin(time * s.userData.speed + s.userData.offset) * 0.003;
+      s.position.x += Math.cos(time * s.userData.speed * 0.7 + s.userData.offset) * 0.002;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.offsetWidth / container.offsetHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+  });
+}
+
+// ===== THREE.JS — PRODUCT 3D CAROUSEL =====
+const productData = [
+  { name: 'Keshkalpa Herbal Oil', cat: "Nature's Gold", price: '₹450', color: 0x3C6B8C, tags: ['🌿 Bhringraj', '🥥 Coconut', '🌺 Hibiscus'] },
+  { name: 'Toor Dal', cat: 'Traditional Delights', price: '₹110', color: 0xD4A843, tags: ['🌾 Organic', '🫘 Stone-ground', '🍂 Fresh'] },
+  { name: 'Kambu Ladoo', cat: "Grandma's Crunch", price: '₹270', color: 0x8B7355, tags: ['🌰 Millet', '🥜 Jaggery', '🍯 Ghee'] },
+  { name: 'Moringa Relish', cat: 'Heritage Preserves', price: '₹230', color: 0x5A8A4A, tags: ['🍃 Moringa', '🌶️ Chilli', '🧂 Rock Salt'] },
+  { name: 'Banana Stem Soup', cat: 'Healing Bowl', price: '₹285', color: 0x8A7A3A, tags: ['🍌 Banana Stem', '🫚 Ginger', '🧅 Onion'] },
+  { name: 'Mudakathan Thokku', cat: 'Heritage Preserves', price: '₹290', color: 0x4A7A5A, tags: ['🌿 Mudakathan', '🧄 Garlic', '🫒 Sesame'] },
+];
+let currentProduct = 0;
+
+function createProductCarousel3D() {
+  const container = document.getElementById('productCarousel3d');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 100);
+  camera.position.set(0, 0.5, 4);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const dLight = new THREE.DirectionalLight(0xffd700, 1);
+  dLight.position.set(3, 5, 4);
+  scene.add(dLight);
+  const pLight = new THREE.PointLight(0xe6a817, 0.6, 10);
+  pLight.position.set(-2, 1, 3);
+  scene.add(pLight);
+
+  // Product jar group
+  const jarGroup = new THREE.Group();
+  scene.add(jarGroup);
+
+  function buildJar(color) {
+    while (jarGroup.children.length) jarGroup.remove(jarGroup.children[0]);
+
+    // Main body — using sphere for rounded jar look
+    const bodyGeo = new THREE.SphereGeometry(1, 32, 32);
+    bodyGeo.scale(0.8, 1, 0.8);
+    const bodyMat = new THREE.MeshPhysicalMaterial({
+      color: color, metalness: 0.05, roughness: 0.25,
+      transmission: 0.3, thickness: 0.8, transparent: true, opacity: 0.88,
+      clearcoat: 1, clearcoatRoughness: 0.1
+    });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    jarGroup.add(body);
+
+    // Cap
+    const capGeo = new THREE.CylinderGeometry(0.45, 0.5, 0.2, 32);
+    const capMat = new THREE.MeshStandardMaterial({ color: 0x5A4525, metalness: 0.4, roughness: 0.5 });
+    const cap = new THREE.Mesh(capGeo, capMat);
+    cap.position.y = 1.1;
+    jarGroup.add(cap);
+
+    // Label band
+    const labelGeo = new THREE.CylinderGeometry(0.82, 0.82, 0.35, 32, 1, true);
+    const labelMat = new THREE.MeshStandardMaterial({ color: 0xFFF8EE, roughness: 0.9, side: THREE.DoubleSide });
+    const label = new THREE.Mesh(labelGeo, labelMat);
+    label.position.y = 0;
+    jarGroup.add(label);
+
+    // Reflection sphere
+    const refGeo = new THREE.SphereGeometry(0.2, 16, 16);
+    const refMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 });
+    const ref = new THREE.Mesh(refGeo, refMat);
+    ref.position.set(-0.3, 0.4, 0.6);
+    jarGroup.add(ref);
+
+    // Base platform
+    const baseGeo = new THREE.CylinderGeometry(1.2, 1.3, 0.1, 32);
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, metalness: 0.5, roughness: 0.3 });
+    const base = new THREE.Mesh(baseGeo, baseMat);
+    base.position.y = -1.15;
+    jarGroup.add(base);
+
+    // Glow ring
+    const ringGeo = new THREE.TorusGeometry(1.2, 0.02, 8, 64);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xe6a817, transparent: true, opacity: 0.4 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = -1.1;
+    jarGroup.add(ring);
+  }
+
+  buildJar(productData[0].color);
+
+  // Floating particles
+  const particles = [];
+  for (let i = 0; i < 20; i++) {
+    const g = new THREE.SphereGeometry(0.03 + Math.random() * 0.04, 8, 8);
+    const m = new THREE.MeshBasicMaterial({ color: 0xe6a817, transparent: true, opacity: 0.4 + Math.random() * 0.3 });
+    const p = new THREE.Mesh(g, m);
+    p.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 3, (Math.random() - 0.5) * 2);
+    p.userData = { spd: 0.2 + Math.random() * 0.4, off: Math.random() * 6.28 };
+    scene.add(p);
+    particles.push(p);
+  }
+
+  let targetRotY = 0, time = 0, isDragging = false, startX = 0, startRot = 0;
+
+  // Touch/swipe to rotate
+  renderer.domElement.addEventListener('touchstart', e => { isDragging = true; startX = e.touches[0].clientX; startRot = targetRotY; }, { passive: true });
+  renderer.domElement.addEventListener('touchmove', e => { if (!isDragging) return; const dx = e.touches[0].clientX - startX; targetRotY = startRot + dx * 0.01; }, { passive: true });
+  renderer.domElement.addEventListener('touchend', () => { isDragging = false; });
+  // Mouse fallback
+  renderer.domElement.addEventListener('mousedown', e => { isDragging = true; startX = e.clientX; startRot = targetRotY; });
+  renderer.domElement.addEventListener('mousemove', e => { if (!isDragging) return; const dx = e.clientX - startX; targetRotY = startRot + dx * 0.01; });
+  renderer.domElement.addEventListener('mouseup', () => { isDragging = false; });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.01;
+    if (!isDragging) targetRotY += 0.005;
+    jarGroup.rotation.y += (targetRotY - jarGroup.rotation.y) * 0.05;
+    jarGroup.position.y = Math.sin(time * 0.8) * 0.08;
+    particles.forEach(p => {
+      p.position.y += Math.sin(time * p.userData.spd + p.userData.off) * 0.002;
+      p.position.x += Math.cos(time * p.userData.spd * 0.5 + p.userData.off) * 0.001;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Navigate products
+  function switchProduct(idx) {
+    currentProduct = idx;
+    const pd = productData[idx];
+    gsap.to(jarGroup.scale, { x: 0, y: 0, z: 0, duration: 0.3, ease: 'power2.in', onComplete: () => {
+      buildJar(pd.color);
+      gsap.to(jarGroup.scale, { x: 1, y: 1, z: 1, duration: 0.5, ease: 'back.out(1.7)' });
+    }});
+    gsap.to('#p3dName', { opacity: 0, y: -10, duration: 0.2, onComplete: () => {
+      document.getElementById('p3dName').textContent = pd.name;
+      gsap.to('#p3dName', { opacity: 1, y: 0, duration: 0.3 });
+    }});
+    gsap.to('#p3dCat', { opacity: 0, duration: 0.2, onComplete: () => {
+      document.getElementById('p3dCat').textContent = pd.cat;
+      gsap.to('#p3dCat', { opacity: 1, duration: 0.3 });
+    }});
+    gsap.to('#p3dPrice', { opacity: 0, duration: 0.2, onComplete: () => {
+      document.getElementById('p3dPrice').textContent = pd.price;
+      gsap.to('#p3dPrice', { opacity: 1, duration: 0.3 });
+    }});
+    document.getElementById('p3dTags').innerHTML = pd.tags.map(t => `<span class="p3d-tag">${t}</span>`).join('');
+    document.querySelectorAll('.p3d-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+
+  document.getElementById('p3dNext').addEventListener('click', () => switchProduct((currentProduct + 1) % productData.length));
+  document.getElementById('p3dPrev').addEventListener('click', () => switchProduct((currentProduct - 1 + productData.length) % productData.length));
+
+  // Swipe gesture on info area
+  let touchStartX = 0;
+  document.querySelector('.p3d-info').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.querySelector('.p3d-info').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) switchProduct((currentProduct + 1) % productData.length);
+      else switchProduct((currentProduct - 1 + productData.length) % productData.length);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.offsetWidth / container.offsetHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+  });
+}
+
+// ===== THREE.JS — STORY CARD MINI 3D =====
+function createStoryCard3D() {
+  document.querySelectorAll('.story-card').forEach(card => {
+    const container = card.querySelector('.story-card-3d');
+    const color = parseInt(card.dataset.color);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 100);
+    camera.position.set(0, 0, 3.5);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    const dl = new THREE.DirectionalLight(0xffd700, 0.8);
+    dl.position.set(2, 4, 3);
+    scene.add(dl);
+
+    // Simple jar
+    const jGeo = new THREE.SphereGeometry(0.7, 24, 24);
+    jGeo.scale(0.7, 0.9, 0.7);
+    const jMat = new THREE.MeshPhysicalMaterial({ color, metalness: 0.05, roughness: 0.3, transmission: 0.25, transparent: true, opacity: 0.85, clearcoat: 0.8 });
+    const j = new THREE.Mesh(jGeo, jMat);
+    scene.add(j);
+
+    const cGeo = new THREE.CylinderGeometry(0.35, 0.4, 0.15, 24);
+    const cMat = new THREE.MeshStandardMaterial({ color: 0x5A4525 });
+    const c = new THREE.Mesh(cGeo, cMat);
+    c.position.y = 0.9;
+    scene.add(c);
+
+    let t = Math.random() * 10;
+    function anim() {
+      requestAnimationFrame(anim);
+      t += 0.01;
+      j.rotation.y = t * 0.3;
+      j.position.y = Math.sin(t * 0.6) * 0.05;
+      renderer.render(scene, camera);
+    }
+    anim();
+  });
+}
+
+// ===== THREE.JS — ABOUT SCENE =====
+function createAbout3D() {
+  const container = document.getElementById('about3d');
+  if (!container) return;
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x4A7A3A, 3, 10);
+  const camera = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 100);
+  camera.position.set(0, 0, 4);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  scene.add(new THREE.DirectionalLight(0x7B9E6B, 1).position.set(3, 4, 3) && new THREE.DirectionalLight(0x7B9E6B, 1));
+  const dl2 = new THREE.DirectionalLight(0x7B9E6B, 1); dl2.position.set(3, 4, 3); scene.add(dl2);
+
+  // Create a landscape of small objects
+  const objs = [];
+  for (let i = 0; i < 30; i++) {
+    const geo = Math.random() > 0.5 ? new THREE.SphereGeometry(0.1 + Math.random() * 0.15, 12, 12) : new THREE.CylinderGeometry(0.05, 0.08, 0.2 + Math.random() * 0.3, 8);
+    const mat = new THREE.MeshStandardMaterial({ color: [0x7B9E6B, 0xC8A951, 0xC47D5A, 0x3C3D99][Math.floor(Math.random() * 4)], roughness: 0.5 });
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set((Math.random() - 0.5) * 5, (Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3);
+    m.userData = { spd: 0.1 + Math.random() * 0.3, off: Math.random() * 6.28 };
+    scene.add(m);
+    objs.push(m);
+  }
+
+  let t = 0;
+  function anim() {
+    requestAnimationFrame(anim);
+    t += 0.008;
+    objs.forEach(o => {
+      o.position.y += Math.sin(t * o.userData.spd + o.userData.off) * 0.002;
+      o.rotation.y = t * o.userData.spd;
+    });
+    renderer.render(scene, camera);
+  }
+  anim();
+}
+
+// ===== INIT ALL ANIMATIONS =====
+function initAll() {
+  createHero3D();
+  createProductCarousel3D();
+  createStoryCard3D();
+  createAbout3D();
+
+  // SplitType (with fallback)
+  if (typeof SplitType !== 'undefined') {
+    try {
+      new SplitType("[text-split]", { types: "words, chars", tagName: "span" });
+      gsap.set("[text-split]", { opacity: 1 });
+      document.querySelectorAll("[words-slide-up]").forEach(el => {
+        ScrollTrigger.create({
+          trigger: el, start: "top 88%",
+          onEnter: () => gsap.from(el.querySelectorAll('.word'), { opacity: 0, yPercent: 100, duration: 1, ease: "expo.out", stagger: { amount: 0.3 } })
+        });
+      });
+    } catch(e) { console.warn('SplitType error:', e); document.querySelectorAll("[text-split]").forEach(el => el.style.opacity = 1); }
+  } else {
+    document.querySelectorAll("[text-split]").forEach(el => {
+      el.style.opacity = 1;
+      ScrollTrigger.create({
+        trigger: el, start: "top 88%",
+        onEnter: () => gsap.from(el, { opacity: 0, y: 40, duration: .8, ease: "expo.out" })
+      });
+    });
+  }
+
+  // Hero entrance
+  gsap.to('.hero-tag', { opacity: 1, y: 0, duration: .6, delay: .2 });
+  gsap.to('.hero-desc', { opacity: 1, duration: .6, delay: .5 });
+  gsap.to('.hero-buttons', { opacity: 1, duration: .6, delay: .7 });
+  gsap.to('.scroll-hint', { opacity: 1, duration: .6, delay: 1 });
+
+  // Navbar scroll
+  ScrollTrigger.create({ start: 60, onUpdate: s => document.getElementById('navbar').classList.toggle('scrolled', s.progress > 0) });
+
+  // Product cards — staggered skew reveal + parallax
+  document.querySelectorAll('.product-card').forEach((card, i) => {
+    gsap.from(card, { y: 60, opacity: 0, rotateX: 5, duration: .8, ease: 'expo.out', scrollTrigger: { trigger: card, start: 'top 90%' }, delay: (i % 2) * .12 });
+    const inner = card.querySelector('.p-card-img-inner');
+    gsap.to(inner, { y: '-8%', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
+
+    // Touch-activated honey drip + ingredients
+    const honeyDrip = card.querySelector('.p-honey-drip svg');
+    const ings = card.querySelectorAll('.p-ing');
+    const activate = () => { if(honeyDrip) honeyDrip.style.transform = 'scaleY(1)'; ings.forEach(el => { el.style.opacity = '1'; el.style.transform = 'scale(1) rotate(0deg)'; }); };
+    const deactivate = () => { if(honeyDrip) honeyDrip.style.transform = 'scaleY(0)'; ings.forEach(el => { el.style.opacity = '0'; el.style.transform = 'scale(0) rotate(-180deg)'; }); };
+    card.addEventListener('touchstart', activate, { passive: true });
+    card.addEventListener('touchend', () => setTimeout(deactivate, 800));
+    card.addEventListener('mouseenter', activate);
+    card.addEventListener('mouseleave', deactivate);
+  });
+
+  // Process timeline
+  ScrollTrigger.create({
+    trigger: '#process', start: 'top 70%',
+    onEnter: () => {
+      gsap.to('#processLine', { height: '100%', duration: 1.5, ease: 'power2.out' });
+      document.querySelectorAll('.process-step').forEach((s, i) => {
+        gsap.to(s, { opacity: 1, x: 0, duration: .6, delay: i * .25, ease: 'expo.out' });
+      });
+    }
+  });
+
+  // About
+  gsap.from('.about-visual', { y: 60, opacity: 0, duration: .8, scrollTrigger: { trigger: '#about', start: 'top 80%' } });
+
+  // Stats counter
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    ScrollTrigger.create({ trigger: el, start: 'top 85%', onEnter: () => {
+      gsap.to({ v: 0 }, { v: target, duration: 2, ease: 'power2.out', onUpdate: function() { el.textContent = Math.floor(this.targets()[0].v); }});
+    }});
+  });
+}
+</script>
+</body>
+</html>

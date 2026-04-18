@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Wonderlyf – Product Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --honey:#E6A817;--honey-light:#F5CC5C;--honey-dark:#B8860B;
+  --gold:#C8A951;--gold-light:#E8D48B;
+  --cream:#FFF8EE;--dark:#0a0a1a;--darker:#050510;
+  --indigo:#2D2D7B;--indigo-light:#3C3D99;
+  --text:#1E1E3A;--text-mid:#4A4A6A;--text-light:#7A7A9A;
+  --white:#fff;
+}
+html,body{overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;color:var(--text);background:var(--dark)}
+h1,h2,h3{font-family:'Playfair Display',serif;line-height:1.1}
+
+/* ===== PRELOADER ===== */
+.preloader{position:fixed;inset:0;z-index:10000;background:var(--darker);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .8s,visibility .8s}
+.preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.pre-ring{width:60px;height:60px;border:3px solid rgba(230,168,23,.15);border-top-color:var(--honey);border-radius:50%;animation:spin .8s linear infinite}
+.pre-label{margin-top:20px;font-size:13px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase}
+
+/* ===== NAVBAR ===== */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--white)}
+.nav-logo span{color:var(--honey)}
+.nav-btn{padding:10px 20px;background:var(--honey);color:var(--dark);border:none;border-radius:50px;font-weight:700;font-size:13px}
+
+/* ===== INTRO ===== */
+.intro{height:100vh;height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 30px;position:relative;overflow:hidden}
+.intro-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 60%,rgba(230,168,23,.06),transparent 60%)}
+.intro-content{position:relative;z-index:2}
+.intro-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(230,168,23,.08);border:1px solid rgba(230,168,23,.15);border-radius:50px;font-size:11px;font-weight:600;color:var(--honey-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;opacity:0}
+.intro h1{font-size:clamp(36px,10vw,60px);color:var(--white);margin-bottom:16px;opacity:0}
+.intro h1 em{font-style:italic;color:var(--honey)}
+.intro p{font-size:16px;color:rgba(255,255,255,.35);max-width:340px;margin:0 auto 32px;line-height:1.7;opacity:0}
+.intro .scroll-cue{opacity:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.scroll-cue span{font-size:10px;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:3px}
+.scroll-cue .arrow{width:1px;height:40px;background:linear-gradient(180deg,var(--honey),transparent);animation:arrowPulse 1.5s infinite}
+
+/* ===== 3D ASSEMBLY SCENE ===== */
+.assembly-section{position:relative;height:800vh}
+.assembly-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.assembly-canvas{position:absolute;inset:0}
+.assembly-canvas canvas{display:block;width:100%!important;height:100%!important}
+
+/* Step labels — overlay text */
+.step-labels{position:absolute;inset:0;z-index:10;pointer-events:none}
+.step-label{position:absolute;top:12%;left:50%;transform:translateX(-50%);text-align:center;opacity:0;width:90%}
+.step-label h2{font-size:clamp(24px,7vw,42px);color:var(--white);margin-bottom:8px}
+.step-label p{font-size:14px;color:rgba(255,255,255,.35);font-family:'Caveat',cursive;font-size:18px}
+
+/* Bottom info bar */
+.step-progress{position:absolute;bottom:30px;left:20px;right:20px;z-index:10}
+.progress-bar{width:100%;height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:16px}
+.progress-fill{height:100%;width:0%;background:var(--honey);border-radius:3px;transition:width .1s}
+.progress-steps{display:flex;justify-content:space-between}
+.progress-step{font-size:10px;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:1px;transition:color .3s}
+.progress-step.active{color:var(--honey)}
+
+/* ===== REVEAL SECTION ===== */
+.reveal-section{padding:80px 20px;background:var(--cream);position:relative}
+.reveal-inner{max-width:500px;margin:0 auto;text-align:center}
+.reveal-product{width:200px;height:260px;margin:0 auto 32px;border-radius:20px;overflow:hidden;position:relative}
+.reveal-product-canvas{position:absolute;inset:0}
+.reveal-product-canvas canvas{width:100%!important;height:100%!important;display:block}
+.reveal-section h2{font-size:28px;color:var(--text);margin-bottom:8px}
+.reveal-sub{font-family:'Caveat',cursive;font-size:20px;color:var(--honey-dark);margin-bottom:16px}
+.reveal-desc{font-size:15px;color:var(--text-mid);line-height:1.7;margin-bottom:24px}
+.reveal-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+.reveal-tag{padding:6px 14px;background:rgba(230,168,23,.08);border:1px solid rgba(230,168,23,.12);border-radius:50px;font-size:12px;color:var(--honey-dark);font-weight:500}
+.reveal-price{font-size:32px;font-weight:800;color:var(--indigo);margin-bottom:24px}
+.reveal-price span{font-size:16px;color:var(--text-light);font-weight:400}
+.btn-buy{display:block;width:100%;padding:18px;background:var(--honey);color:var(--dark);border:none;border-radius:14px;font-weight:700;font-size:16px;letter-spacing:.5px;position:relative;overflow:hidden}
+.btn-buy::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.2) 50%,transparent 70%);transform:translateX(-100%);transition:transform .6s}
+.btn-buy:active::after{transform:translateX(100%)}
+
+/* ===== MORE PRODUCTS CAROUSEL ===== */
+.more-section{padding:60px 0 80px;background:var(--cream);overflow:hidden}
+.more-section .sec-header{padding:0 20px;margin-bottom:24px}
+.sec-tag{font-size:11px;font-weight:600;color:var(--honey-dark);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-tag::before{content:'';width:20px;height:2px;background:var(--honey)}
+.sec-header h2{font-size:28px;color:var(--text)}
+.more-track{display:flex;gap:16px;padding:0 20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.more-track::-webkit-scrollbar{display:none}
+.more-card{min-width:200px;flex-shrink:0;scroll-snap-align:start;border-radius:16px;overflow:hidden;background:var(--white)}
+.more-card-img{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:50px;position:relative}
+.mc-bg-1{background:linear-gradient(135deg,#FFF5E0,#FFE8B5)}.mc-bg-2{background:linear-gradient(135deg,#E8F0E0,#D0E4C0)}
+.mc-bg-3{background:linear-gradient(135deg,#F0E8E0,#E4D0C0)}.mc-bg-4{background:linear-gradient(135deg,#E0E8F0,#C0D0E4)}
+.mc-bg-5{background:linear-gradient(135deg,#F5F0D8,#E8E0B8)}
+.more-card-info{padding:14px}
+.more-card-info h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.more-card-info .price{font-size:16px;font-weight:800;color:var(--indigo)}
+
+/* ===== CTA ===== */
+.cta-section{padding:80px 20px;background:var(--dark);text-align:center}
+.cta-section h2{font-size:30px;color:var(--white);margin-bottom:12px}
+.cta-section h2 em{color:var(--honey);font-style:italic}
+.cta-section p{font-size:15px;color:rgba(255,255,255,.3);margin-bottom:28px}
+.cta-btn{display:inline-block;padding:18px 40px;background:var(--honey);color:var(--dark);border:none;border-radius:50px;font-weight:700;font-size:15px}
+
+/* ===== FOOTER ===== */
+.footer{padding:40px 20px 24px;background:#060612;color:rgba(255,255,255,.35);text-align:center;font-size:13px}
+.footer .f-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;margin-bottom:8px}
+.footer .f-logo span{color:var(--honey)}
+
+/* ===== KEYFRAMES ===== */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes arrowPulse{0%,100%{opacity:.3;height:30px}50%{opacity:1;height:40px}}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader"><div class="pre-ring"></div><div class="pre-label">Crafting...</div></div>
+
+<!-- NAVBAR -->
+<nav class="navbar"><a class="nav-logo">Wonder<span>lyf</span></a><button class="nav-btn">Shop</button></nav>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="intro-bg"></div>
+  <div class="intro-content">
+    <div class="intro-tag">🍯 Watch It Come to Life</div>
+    <h1>Heritage <em>Crafted</em><br>Before Your Eyes</h1>
+    <p>Scroll down to watch how our signature product is crafted — from raw ingredients to your doorstep.</p>
+    <div class="scroll-cue">
+      <span>Scroll to begin</span>
+      <div class="arrow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D ASSEMBLY ANIMATION (scroll-driven) -->
+<section class="assembly-section" id="assembly">
+  <div class="assembly-sticky">
+    <div class="assembly-canvas" id="assemblyCanvas"></div>
+    <div class="step-labels">
+      <div class="step-label" id="stepLabel0"><h2>The Glass Forms</h2><p>Hand-blown artisan jar takes shape</p></div>
+      <div class="step-label" id="stepLabel1"><h2>Nature's Ingredients</h2><p>Bhringraj, Amla, Coconut, Hibiscus, Neem...</p></div>
+      <div class="step-label" id="stepLabel2"><h2>Golden Elixir Pours</h2><p>Cold-pressed herbal oil fills the jar</p></div>
+      <div class="step-label" id="stepLabel3"><h2>The Label Wraps</h2><p>Wonderlyf — Heritage Crafted Excellence</p></div>
+      <div class="step-label" id="stepLabel4"><h2>Sealed with Care</h2><p>Wooden cap locks in the freshness</p></div>
+      <div class="step-label" id="stepLabel5"><h2>Ready for You</h2><p>From our village artisans to your doorstep</p></div>
+    </div>
+    <div class="step-progress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-steps">
+        <span class="progress-step active" id="ps0">Glass</span>
+        <span class="progress-step" id="ps1">Herbs</span>
+        <span class="progress-step" id="ps2">Pour</span>
+        <span class="progress-step" id="ps3">Label</span>
+        <span class="progress-step" id="ps4">Seal</span>
+        <span class="progress-step" id="ps5">Done</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT REVEAL -->
+<section class="reveal-section" id="reveal">
+  <div class="reveal-inner">
+    <div class="reveal-product"><div class="reveal-product-canvas" id="revealCanvas"></div></div>
+    <h2>Keshkalpa Herbal Oil</h2>
+    <div class="reveal-sub">Ancient Ayurvedic Hair Elixir</div>
+    <p class="reveal-desc">A powerful blend of rare herbs and cold-pressed oils using a centuries-old recipe. Nourishes from root to tip for thick, lustrous hair.</p>
+    <div class="reveal-tags">
+      <span class="reveal-tag">🌿 Bhringraj</span>
+      <span class="reveal-tag">🥥 Coconut</span>
+      <span class="reveal-tag">🌺 Hibiscus</span>
+      <span class="reveal-tag">🌱 Amla</span>
+      <span class="reveal-tag">🍃 Neem</span>
+    </div>
+    <div class="reveal-price">₹450 <span>– ₹38,500</span></div>
+    <button class="btn-buy">Add to Cart →</button>
+  </div>
+</section>
+
+<!-- MORE PRODUCTS -->
+<section class="more-section">
+  <div class="sec-header"><div class="sec-tag">More Products</div><h2>Explore the Collection</h2></div>
+  <div class="more-track">
+    <div class="more-card"><div class="more-card-img mc-bg-1">🫘</div><div class="more-card-info"><h3>Toor Dal</h3><div class="price">₹110</div></div></div>
+    <div class="more-card"><div class="more-card-img mc-bg-2">🍪</div><div class="more-card-info"><h3>Kambu Ladoo</h3><div class="price">₹270</div></div></div>
+    <div class="more-card"><div class="more-card-img mc-bg-3">🌿</div><div class="more-card-info"><h3>Moringa Relish</h3><div class="price">₹230</div></div></div>
+    <div class="more-card"><div class="more-card-img mc-bg-4">🍲</div><div class="more-card-info"><h3>Banana Stem Soup</h3><div class="price">₹285</div></div></div>
+    <div class="more-card"><div class="more-card-img mc-bg-5">🥬</div><div class="more-card-info"><h3>Mudakathan Thokku</h3><div class="price">₹290</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section"><h2>Taste the <em>Tradition</em></h2><p>Heritage-crafted goodness, delivered to your doorstep</p><button class="cta-btn">Shop All Products →</button></section>
+
+<!-- FOOTER -->
+<footer class="footer"><div class="f-logo">Wonder<span>lyf</span></div><p>© 2026 Wonderlyf Private Limited</p></footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ===== PRELOADER =====
+window.addEventListener('load', () => setTimeout(() => document.getElementById('preloader').classList.add('done'), 1200));
+
+// ===== INTRO ANIMATIONS =====
+gsap.to('.intro-tag', { opacity: 1, y: 0, duration: .6, delay: 1.5 });
+gsap.to('.intro h1', { opacity: 1, y: 0, duration: .8, delay: 1.8 });
+gsap.to('.intro p', { opacity: 1, duration: .6, delay: 2.1 });
+gsap.to('.scroll-cue', { opacity: 1, duration: .6, delay: 2.5 });
+
+// ===== THREE.JS ASSEMBLY SCENE =====
+(function() {
+  const container = document.getElementById('assemblyCanvas');
+  const W = container.offsetWidth, H = container.offsetHeight;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x050510);
+  scene.fog = new THREE.FogExp2(0x050510, 0.08);
+
+  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+  camera.position.set(0, 0.5, 5);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  container.appendChild(renderer.domElement);
+
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+  scene.add(ambientLight);
+  const keyLight = new THREE.DirectionalLight(0xffd700, 1.2);
+  keyLight.position.set(4, 6, 4);
+  keyLight.castShadow = true;
+  scene.add(keyLight);
+  const rimLight = new THREE.PointLight(0xe6a817, 0.6, 15);
+  rimLight.position.set(-3, 2, 3);
+  scene.add(rimLight);
+  const fillLight = new THREE.PointLight(0x3C3D99, 0.3, 10);
+  fillLight.position.set(2, -1, 4);
+  scene.add(fillLight);
+  const bottomGlow = new THREE.PointLight(0xe6a817, 0.4, 5);
+  bottomGlow.position.set(0, -2, 2);
+  scene.add(bottomGlow);
+
+  // === JAR BODY (glass) ===
+  const jarBodyGeo = new THREE.CylinderGeometry(0.75, 0.85, 2, 32, 1, false);
+  const jarGlassMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff, metalness: 0, roughness: 0.05,
+    transmission: 0.92, thickness: 0.5, transparent: true, opacity: 0.25,
+    clearcoat: 1, clearcoatRoughness: 0.02, ior: 1.45,
+    envMapIntensity: 1
+  });
+  const jarBody = new THREE.Mesh(jarBodyGeo, jarGlassMat);
+  jarBody.position.y = 0;
+  jarBody.scale.set(0, 0, 0); // starts invisible
+  scene.add(jarBody);
+
+  // Jar bottom
+  const jarBottomGeo = new THREE.CylinderGeometry(0.85, 0.85, 0.08, 32);
+  const jarBottomMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transmission: 0.8, transparent: true, opacity: 0.3, roughness: 0.1 });
+  const jarBottom = new THREE.Mesh(jarBottomGeo, jarBottomMat);
+  jarBottom.position.y = -1.04;
+  jarBottom.scale.set(0, 0, 0);
+  scene.add(jarBottom);
+
+  // === HONEY LIQUID (inside jar) ===
+  const honeyGeo = new THREE.CylinderGeometry(0.7, 0.8, 0, 32); // height starts at 0
+  const honeyMat = new THREE.MeshPhysicalMaterial({
+    color: 0xE6A817, metalness: 0.1, roughness: 0.2,
+    transmission: 0.3, thickness: 1, transparent: true, opacity: 0.85
+  });
+  const honey = new THREE.Mesh(honeyGeo, honeyMat);
+  honey.position.y = -1;
+  scene.add(honey);
+
+  // === HONEY STREAM (pouring from top) ===
+  const streamGeo = new THREE.CylinderGeometry(0.06, 0.08, 3, 12);
+  const streamMat = new THREE.MeshPhysicalMaterial({
+    color: 0xD4920A, metalness: 0, roughness: 0.15,
+    transmission: 0.2, transparent: true, opacity: 0.8
+  });
+  const stream = new THREE.Mesh(streamGeo, streamMat);
+  stream.position.y = 2.5;
+  stream.scale.set(0, 0, 0);
+  scene.add(stream);
+
+  // === LABEL (band around jar) ===
+  const labelGeo = new THREE.CylinderGeometry(0.88, 0.88, 0.55, 32, 1, true);
+  const labelMat = new THREE.MeshStandardMaterial({
+    color: 0xFFF8EE, metalness: 0, roughness: 0.9, side: THREE.DoubleSide,
+    transparent: true, opacity: 0
+  });
+  const label = new THREE.Mesh(labelGeo, labelMat);
+  label.position.y = -0.1;
+  scene.add(label);
+
+  // Label text band (colored stripe)
+  const stripGeo = new THREE.CylinderGeometry(0.89, 0.89, 0.12, 32, 1, true);
+  const stripMat = new THREE.MeshStandardMaterial({ color: 0x2D2D7B, side: THREE.DoubleSide, transparent: true, opacity: 0 });
+  const strip = new THREE.Mesh(stripGeo, stripMat);
+  strip.position.y = 0.05;
+  scene.add(strip);
+
+  // === CAP ===
+  const capGeo = new THREE.CylinderGeometry(0.55, 0.6, 0.3, 32);
+  const capMat = new THREE.MeshStandardMaterial({ color: 0x5A4525, metalness: 0.35, roughness: 0.55 });
+  const cap = new THREE.Mesh(capGeo, capMat);
+  cap.position.y = 4; // starts way above
+  scene.add(cap);
+
+  // Cap ring detail
+  const capRingGeo = new THREE.TorusGeometry(0.58, 0.02, 8, 32);
+  const capRingMat = new THREE.MeshStandardMaterial({ color: 0x8B7355, metalness: 0.5, roughness: 0.4 });
+  const capRing = new THREE.Mesh(capRingGeo, capRingMat);
+  capRing.rotation.x = Math.PI / 2;
+  capRing.position.y = 4;
+  scene.add(capRing);
+
+  // === FLOATING INGREDIENTS ===
+  const ingredients = [];
+  const ingColors = [0x7B9E6B, 0xC47D5A, 0xE6A817, 0x5A3A8A, 0xC8A951, 0x8B4513, 0x2E8B57, 0xDAA520];
+  for (let i = 0; i < 16; i++) {
+    const size = 0.06 + Math.random() * 0.1;
+    const geo = Math.random() > 0.4
+      ? new THREE.SphereGeometry(size, 12, 12)
+      : new THREE.DodecahedronGeometry(size, 0);
+    const mat = new THREE.MeshStandardMaterial({ color: ingColors[i % ingColors.length], metalness: 0.1, roughness: 0.5 });
+    const mesh = new THREE.Mesh(geo, mat);
+    const angle = (i / 16) * Math.PI * 2;
+    const radius = 1.8 + Math.random() * 1.5;
+    mesh.position.set(Math.cos(angle) * radius, (Math.random() - 0.5) * 3, Math.sin(angle) * radius);
+    mesh.userData = {
+      origX: mesh.position.x, origY: mesh.position.y, origZ: mesh.position.z,
+      speed: 0.5 + Math.random(), phase: Math.random() * Math.PI * 2
+    };
+    mesh.visible = false;
+    scene.add(mesh);
+    ingredients.push(mesh);
+  }
+
+  // === SPARKLE PARTICLES ===
+  const sparkCount = 60;
+  const sparkGeo = new THREE.BufferGeometry();
+  const sparkPositions = new Float32Array(sparkCount * 3);
+  for (let i = 0; i < sparkCount; i++) {
+    sparkPositions[i * 3] = (Math.random() - 0.5) * 6;
+    sparkPositions[i * 3 + 1] = (Math.random() - 0.5) * 5;
+    sparkPositions[i * 3 + 2] = (Math.random() - 0.5) * 4;
+  }
+  sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
+  const sparkMat = new THREE.PointsMaterial({ color: 0xE6A817, size: 0.03, transparent: true, opacity: 0 });
+  const sparks = new THREE.Points(sparkGeo, sparkMat);
+  scene.add(sparks);
+
+  // === PLATFORM ===
+  const platGeo = new THREE.CylinderGeometry(1.5, 1.6, 0.08, 48);
+  const platMat = new THREE.MeshStandardMaterial({ color: 0x0a0a1a, metalness: 0.8, roughness: 0.2 });
+  const platform = new THREE.Mesh(platGeo, platMat);
+  platform.position.y = -1.1;
+  platform.receiveShadow = true;
+  scene.add(platform);
+
+  // Glow ring on platform
+  const glowRingGeo = new THREE.TorusGeometry(1.5, 0.015, 8, 64);
+  const glowRingMat = new THREE.MeshBasicMaterial({ color: 0xe6a817, transparent: true, opacity: 0.3 });
+  const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
+  glowRing.rotation.x = Math.PI / 2;
+  glowRing.position.y = -1.06;
+  scene.add(glowRing);
+
+  // === ANIMATION STATE ===
+  let progress = 0; // 0 to 1
+  let time = 0;
+
+  function updateScene(p) {
+    progress = p;
+    time += 0.016;
+
+    // Camera gentle orbit
+    const camAngle = p * 0.8;
+    camera.position.x = Math.sin(camAngle) * 4.5;
+    camera.position.z = Math.cos(camAngle) * 4.5;
+    camera.position.y = 0.5 + Math.sin(p * Math.PI) * 0.8;
+    camera.lookAt(0, 0, 0);
+
+    // ======= STEP 0: 0-0.15 — Glass jar forms =======
+    const step0 = Math.min(p / 0.15, 1);
+    const jarScale = gsapEase(step0);
+    jarBody.scale.set(jarScale, jarScale, jarScale);
+    jarBottom.scale.set(jarScale, jarScale, jarScale);
+    // Glass shimmer
+    jarBody.rotation.y = time * 0.3;
+
+    // ======= STEP 1: 0.15-0.30 — Ingredients appear & orbit =======
+    const step1 = Math.max(0, Math.min((p - 0.15) / 0.15, 1));
+    ingredients.forEach((ing, i) => {
+      ing.visible = step1 > 0;
+      if (step1 > 0) {
+        const orbitPhase = time * ing.userData.speed + ing.userData.phase;
+        const radius = 1.5 + (1 - step1) * 1.5;
+        const angle = (i / ingredients.length) * Math.PI * 2 + time * 0.3;
+        ing.position.x = Math.cos(angle + orbitPhase * 0.2) * radius;
+        ing.position.z = Math.sin(angle + orbitPhase * 0.2) * radius;
+        ing.position.y = Math.sin(orbitPhase) * 0.5 + (Math.random() > 0.99 ? 0 : 0);
+        ing.rotation.x = time * ing.userData.speed;
+        ing.rotation.z = time * ing.userData.speed * 0.7;
+        // Scale in
+        const s = Math.min(step1 * 3, 1);
+        ing.scale.set(s, s, s);
+      }
+    });
+
+    // ======= STEP 2: 0.30-0.50 — Ingredients absorb + Honey pours =======
+    const step2 = Math.max(0, Math.min((p - 0.30) / 0.20, 1));
+    // Ingredients shrink toward jar center
+    if (step2 > 0) {
+      ingredients.forEach(ing => {
+        const shrink = Math.max(0, 1 - step2 * 1.5);
+        const targetScale = shrink;
+        ing.scale.set(targetScale, targetScale, targetScale);
+        ing.position.x *= 0.98;
+        ing.position.z *= 0.98;
+        ing.position.y *= 0.98;
+      });
+    }
+
+    // Honey stream appears
+    const streamShow = Math.max(0, Math.min((step2 - 0.1) / 0.3, 1));
+    stream.scale.set(streamShow, streamShow, streamShow);
+    stream.position.y = 2.5 - streamShow * 0.5;
+    stream.material.opacity = streamShow * 0.8;
+
+    // Honey fills jar
+    const fillAmount = Math.max(0, Math.min((step2 - 0.2) / 0.8, 1));
+    const honeyHeight = fillAmount * 1.6;
+    honey.geometry.dispose();
+    honey.geometry = new THREE.CylinderGeometry(0.7, 0.8, honeyHeight, 32);
+    honey.position.y = -1 + honeyHeight / 2;
+
+    // Honey surface wobble
+    honey.rotation.y = time * 0.5;
+
+    // ======= STEP 3: 0.50-0.65 — Stream disappears, Label wraps =======
+    const step3 = Math.max(0, Math.min((p - 0.50) / 0.15, 1));
+    // Stream fades
+    stream.scale.set(Math.max(0, 1 - step3 * 2), Math.max(0, 1 - step3 * 2), Math.max(0, 1 - step3 * 2));
+
+    // Label fades in with rotation
+    labelMat.opacity = step3;
+    stripMat.opacity = step3;
+    label.rotation.y = (1 - step3) * Math.PI + time * 0.2;
+    strip.rotation.y = label.rotation.y;
+
+    // ======= STEP 4: 0.65-0.80 — Cap descends =======
+    const step4 = Math.max(0, Math.min((p - 0.65) / 0.15, 1));
+    const capEased = easeOutBounce(step4);
+    const capY = 4 - capEased * 2.85; // lands at ~1.15
+    cap.position.y = capY;
+    capRing.position.y = capY;
+    // Cap slight rotation during descent
+    cap.rotation.y = (1 - step4) * Math.PI * 2;
+
+    // ======= STEP 5: 0.80-1.00 — Final glow, sparkles, rotate =======
+    const step5 = Math.max(0, Math.min((p - 0.80) / 0.20, 1));
+    // Sparkles
+    sparkMat.opacity = step5 * 0.6;
+    sparks.rotation.y = time * 0.2;
+
+    // Glow intensifies
+    glowRingMat.opacity = 0.3 + step5 * 0.5;
+    bottomGlow.intensity = 0.4 + step5 * 0.8;
+    rimLight.intensity = 0.6 + step5 * 0.4;
+
+    // Everything rotates together
+    jarBody.rotation.y = time * 0.3 + step5 * time * 0.5;
+    honey.rotation.y = jarBody.rotation.y;
+    label.rotation.y = jarBody.rotation.y;
+    strip.rotation.y = jarBody.rotation.y;
+
+    // Platform glow pulse
+    glowRing.scale.set(1 + Math.sin(time * 2) * 0.05 * step5, 1, 1 + Math.sin(time * 2) * 0.05 * step5);
+
+    renderer.render(scene, camera);
+  }
+
+  // Easing helpers
+  function gsapEase(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function easeOutBounce(t) {
+    const n1 = 7.5625, d1 = 2.75;
+    if (t < 1 / d1) return n1 * t * t;
+    else if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75;
+    else if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375;
+    else return n1 * (t -= 2.625 / d1) * t + 0.984375;
+  }
+
+  // === SCROLL-DRIVEN ANIMATION ===
+  ScrollTrigger.create({
+    trigger: '#assembly',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: 0.5,
+    onUpdate: self => {
+      updateScene(self.progress);
+
+      // Update progress bar
+      document.getElementById('progressFill').style.width = (self.progress * 100) + '%';
+
+      // Update step labels
+      const steps = [0, 0.15, 0.30, 0.50, 0.65, 0.80];
+      for (let i = 0; i < 6; i++) {
+        const el = document.getElementById('stepLabel' + i);
+        const ps = document.getElementById('ps' + i);
+        const start = steps[i];
+        const end = i < 5 ? steps[i + 1] : 1;
+        const inRange = self.progress >= start && self.progress < end;
+        el.style.opacity = inRange ? 1 : 0;
+        el.style.transform = inRange ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(20px)';
+        el.style.transition = 'all 0.4s ease';
+        ps.classList.toggle('active', self.progress >= start);
+      }
+    }
+  });
+
+  // Idle animation loop
+  function idleLoop() {
+    requestAnimationFrame(idleLoop);
+    time += 0.008;
+    // Only render if not scroll-driving
+  }
+  // Initial render
+  updateScene(0);
+
+  // Resize
+  window.addEventListener('resize', () => {
+    const w = container.offsetWidth, h = container.offsetHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+})();
+
+// ===== REVEAL PRODUCT 3D (small spinning jar) =====
+(function() {
+  const container = document.getElementById('revealCanvas');
+  if (!container) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 50);
+  camera.position.set(0, 0.3, 3.5);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const dl = new THREE.DirectionalLight(0xffd700, 1);
+  dl.position.set(3, 4, 3);
+  scene.add(dl);
+  scene.add(new THREE.PointLight(0xe6a817, 0.4, 8).position.set(-2, 1, 2) || new THREE.PointLight(0xe6a817, 0.4, 8));
+
+  // Complete jar
+  const bodyGeo = new THREE.CylinderGeometry(0.6, 0.7, 1.5, 32);
+  const bodyMat = new THREE.MeshPhysicalMaterial({ color: 0xE6A817, metalness: 0.1, roughness: 0.2, transmission: 0.3, transparent: true, opacity: 0.85, clearcoat: 1 });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+
+  const capGeo = new THREE.CylinderGeometry(0.45, 0.5, 0.22, 32);
+  const capMat = new THREE.MeshStandardMaterial({ color: 0x5A4525, metalness: 0.35, roughness: 0.5 });
+  const cap = new THREE.Mesh(capGeo, capMat);
+  cap.position.y = 0.86;
+
+  const labelGeo = new THREE.CylinderGeometry(0.72, 0.72, 0.4, 32, 1, true);
+  const labelMat = new THREE.MeshStandardMaterial({ color: 0xFFF8EE, roughness: 0.9, side: THREE.DoubleSide });
+  const label = new THREE.Mesh(labelGeo, labelMat);
+  label.position.y = -0.05;
+
+  const group = new THREE.Group();
+  group.add(body, cap, label);
+  scene.add(group);
+
+  function anim() {
+    requestAnimationFrame(anim);
+    group.rotation.y += 0.008;
+    group.position.y = Math.sin(Date.now() * 0.001) * 0.05;
+    renderer.render(scene, camera);
+  }
+  anim();
+})();
+
+// ===== REVEAL SECTION GSAP =====
+gsap.from('.reveal-inner', {
+  y: 60, opacity: 0, duration: .8,
+  scrollTrigger: { trigger: '#reveal', start: 'top 80%' }
+});
+
+// ===== MORE CARDS STAGGER =====
+document.querySelectorAll('.more-card').forEach((card, i) => {
+  gsap.from(card, { y: 40, opacity: 0, duration: .6, delay: i * .1, scrollTrigger: { trigger: '.more-section', start: 'top 80%' } });
+});
+</script>
+</body>
+</html>

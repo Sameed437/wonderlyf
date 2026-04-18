@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:1200px; height:900px; font-family:'Georgia',serif; background:#FFF9F0; overflow:hidden; }
+
+.nav { background:rgba(255,249,240,0.95); padding:16px 48px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(212,148,10,0.1); }
+.nav-logo { font-size:22px; font-weight:800; color:#2C1810; }
+.nav-logo span { color:#D4940A; }
+.nav-links { display:flex; gap:32px; font-size:14px; color:#5C4033; }
+
+.hero { background:linear-gradient(135deg,#2C1810 0%,#5C4033 100%); height:320px; display:flex; align-items:center; justify-content:center; text-align:center; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:url('https://wonderlyf.com/wp-content/uploads/2026/02/About-US_Wonderlyf.jpg') center/cover; opacity:0.35; }
+.hero-content { position:relative; z-index:1; color:#fff; }
+.hero-pre { font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:#F0C14B; margin-bottom:12px; }
+.hero-title { font-size:52px; font-weight:800; line-height:1.1; margin-bottom:16px; }
+.hero-title span { color:#F0C14B; }
+.hero-btns { display:flex; gap:12px; justify-content:center; margin-top:24px; }
+.btn-h { background:#D4940A; color:#fff; padding:12px 28px; border-radius:999px; font-size:14px; font-weight:700; }
+.btn-o { background:rgba(255,255,255,0.15); color:#fff; padding:12px 28px; border-radius:999px; font-size:14px; border:1px solid rgba(255,255,255,0.3); }
+
+.marquee { background:#D4940A; padding:10px 0; display:flex; gap:0; overflow:hidden; }
+.marquee-i { color:#fff; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:0 28px; white-space:nowrap; }
+.marquee-dot { width:4px;height:4px;background:rgba(255,255,255,0.5);border-radius:50%;display:inline-block;margin-right:28px;vertical-align:middle; }
+
+.products { padding:40px 48px 32px; background:#FFF9F0; }
+.section-sub { background:rgba(212,148,10,0.08); color:#D4940A; font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; padding:4px 14px; border-radius:999px; border:1px solid rgba(212,148,10,0.2); }
+.section-title { font-size:32px; font-weight:800; color:#2C1810; margin:10px 0 8px; }
+.products-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:24px; }
+.product-card { background:#fff; border-radius:16px; overflow:hidden; border:1px solid rgba(212,148,10,0.1); box-shadow:0 4px 16px rgba(212,148,10,0.1); }
+.product-img { background:#FFF9F0; height:120px; display:flex; align-items:center; justify-content:center; }
+.product-img img { height:100px; object-fit:contain; }
+.product-body { padding:12px 14px; }
+.product-cat { font-size:9px; text-transform:uppercase; letter-spacing:.15em; color:#D4940A; font-weight:700; margin-bottom:4px; }
+.product-name { font-size:13px; font-weight:700; color:#2C1810; margin-bottom:8px; }
+.product-price { font-size:15px; font-weight:800; color:#8B6914; }
+.product-btn { background:#D4940A; color:#fff; border:none; border-radius:999px; padding:6px 14px; font-size:11px; font-weight:700; }
+.product-footer { display:flex; justify-content:space-between; align-items:center; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-logo">Wonder<span>lyf</span></div>
+  <div class="nav-links">
+    <span>Home</span><span>Shop</span><span>About</span><span>Contact</span>
+  </div>
+  <div style="background:#D4940A;color:#fff;padding:8px 20px;border-radius:999px;font-size:13px;font-weight:700;">Shop Now</div>
+</div>
+
+<div class="marquee">
+  <span class="marquee-i"><span class="marquee-dot"></span>100% Natural</span>
+  <span class="marquee-i"><span class="marquee-dot"></span>Traditional Recipes</span>
+  <span class="marquee-i"><span class="marquee-dot"></span>No Preservatives</span>
+  <span class="marquee-i"><span class="marquee-dot"></span>Made with Love</span>
+  <span class="marquee-i"><span class="marquee-dot"></span>Forest Honey</span>
+  <span class="marquee-i"><span class="marquee-dot"></span>Shipped Across India</span>
+</div>
+
+<div class="hero">
+  <div class="hero-content">
+    <p class="hero-pre">Crafting Authentic, Nutritious Food</p>
+    <h1 class="hero-title">Bring Wonders<br><span>to your Life</span></h1>
+    <div class="hero-btns">
+      <div class="btn-h">Shop Now →</div>
+      <div class="btn-o">Our Story</div>
+    </div>
+  </div>
+</div>
+
+<div class="products">
+  <div style="text-align:center; margin-bottom:8px;"><span class="section-sub">Featured Products</span></div>
+  <div class="section-title" style="text-align:center;">Crafted with Care</div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-img"><img src="https://wonderlyf.com/wp-content/uploads/2025/12/Forest-Honey-300x300.png" alt=""></div>
+      <div class="product-body">
+        <p class="product-cat">Honey</p>
+        <p class="product-name">Forest Honey</p>
+        <div class="product-footer"><span class="product-price">₹450</span><button class="product-btn">Add</button></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="https://wonderlyf.com/wp-content/uploads/2026/03/01-300x300.png" alt=""></div>
+      <div class="product-body">
+        <p class="product-cat">Ladoo</p>
+        <p class="product-name">Kambu Ladoo</p>
+        <div class="product-footer"><span class="product-price">₹199</span><button class="product-btn">Add</button></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="https://wonderlyf.com/wp-content/uploads/2026/02/PNG-1-300x300.png" alt=""></div>
+      <div class="product-body">
+        <p class="product-cat">Relish</p>
+        <p class="product-name">Moringa Relish</p>
+        <div class="product-footer"><span class="product-price">₹179</span><button class="product-btn">Add</button></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="https://wonderlyf.com/wp-content/uploads/2026/02/01-2-300x300.png" alt=""></div>
+      <div class="product-body">
+        <p class="product-cat">Hair Care</p>
+        <p class="product-name">Keshkalpa</p>
+        <div class="product-footer"><span class="product-price">₹349</span><button class="product-btn">Add</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
