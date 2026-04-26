@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hero intro — pure CSS, runs as soon as the browser paints, so it never
+   blocks the LCP element. Note: starts at full opacity so PageSpeed/LCP
+   can register the h1 immediately; the animation only adds a gentle
+   translate-in that doesn't affect the largest-paint measurement. */
+@keyframes heroIntro {
+  from { transform: translateY(16px); }
+  to   { transform: translateY(0); }
+}
+.hero-intro {
+  animation: heroIntro 0.5s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-intro { animation: none; }
+}
+
+/* Marquee — pure CSS infinite scroll (keeps framer off the critical path). */
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marqueeScroll linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
 html,
 body,
 #root {
@@ -141,3 +169,35 @@ body {
 .cta-pulse {
   animation: gentle-pulse 3s ease-in-out infinite;
 }
+
+/* WordPress post content (rendered via dangerouslySetInnerHTML on /blog/:slug) */
+.wp-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2C1810;
+  margin: 2rem 0 0.75rem;
+  line-height: 1.25;
+}
+.wp-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2C1810;
+  margin: 1.5rem 0 0.5rem;
+}
+.wp-content p { margin: 0 0 1.1rem; }
+.wp-content a { color: #D4940A; text-decoration: underline; }
+.wp-content a:hover { color: #8B6914; }
+.wp-content ul, .wp-content ol { margin: 0 0 1.1rem; padding-left: 1.4rem; }
+.wp-content li { margin-bottom: 0.4rem; }
+.wp-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 1.25rem 0; }
+.wp-content blockquote {
+  border-left: 4px solid #D4940A;
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 1.25rem 0;
+  font-style: italic;
+  color: #2C1810;
+}
+.wp-content figure { margin: 1.25rem 0; }
+.wp-content figure figcaption { text-align: center; font-size: 0.875rem; color: #6B5A4A; margin-top: 0.5rem; }

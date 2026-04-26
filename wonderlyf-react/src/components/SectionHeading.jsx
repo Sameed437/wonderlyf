@@ -7,14 +7,14 @@ export default function SectionHeading({ subtitle, title, description }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="text-center mb-12"
+      className="text-center mb-6 md:mb-8"
     >
       {subtitle && (
-        <p className="text-honey text-sm tracking-widest uppercase mb-3 font-medium">
+        <p className="text-honey text-sm tracking-widest uppercase mb-2 font-medium">
           {subtitle}
         </p>
       )}
-      <h2 className="font-serif text-3xl md:text-4xl font-bold text-warm-brown mb-4">
+      <h2 className="font-serif text-3xl md:text-4xl font-bold text-warm-brown mb-3">
         {title}
       </h2>
       {description && (

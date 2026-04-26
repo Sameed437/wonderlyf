@@ -11,6 +11,12 @@
     <link rel="preconnect" href="https://api.wonderlyf.co.uk" crossorigin />
     <link rel="dns-prefetch" href="https://wonderlyf.com" />
     <link rel="dns-prefetch" href="https://api.wonderlyf.co.uk" />
+
+    <!-- Hero video starts downloading via the <video preload="auto"> element
+         in HeroVideo.jsx. We previously had a <link rel=preload> here but it
+         doesn't match any actual fetch() call so the browser logs an
+         "unused preload" warning — the <video> tag handles it natively. -->
+    <link rel="dns-prefetch" href="https://wonderlyf.com" />
     <title>Wonderlyf UK | Traditional Indian Wellness Products | Free UK Delivery</title>
     <meta name="description" content="Shop authentic Indian wellness products in the UK. Pure forest honey, traditional herbal remedies, moringa products, and handcrafted food. Free delivery over £30. FSSAI certified, 100% natural." />
     <meta name="keywords" content="Indian wellness products UK, forest honey UK, moringa honey, traditional Indian food UK, herbal remedies, natural products, Ayurvedic food, Tamil Nadu food UK" />
@@ -39,10 +45,23 @@
     <meta name="twitter:description" content="Shop authentic Indian wellness products in the UK. Pure forest honey, herbal remedies, and handcrafted food." />
     <meta name="twitter:image" content="https://wonderlyf.com/wp-content/uploads/2026/01/Natures-Gold-1.jpg" />
 
-    <!-- Fonts -->
+    <!-- Fonts — async-loaded so they don't block the first paint.
+         We request only the weights actually used to cut ~1.5s of render
+         blocking reported by PageSpeed Insights. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    >
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
+      >
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

@@ -15,7 +15,7 @@ export default {
         'honey-dark': '#8B6914',
         'warm-brown': '#2C1810',
         'warm-gray': '#5C4033',
-        'warm-light': '#8B7355',
+        'warm-light': '#7A6142',
         'brand-deep': '#2C1810',
       },
       fontFamily: {

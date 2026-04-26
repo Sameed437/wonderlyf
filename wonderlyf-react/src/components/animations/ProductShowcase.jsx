@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
 const showcaseProducts = [
-  { name: "Forest Honey", tagline: "Pure Wild Forest Honey", price: "£15", image: "/products/8.png", color: "from-honey/10 to-honey-light/5", accent: "#D4940A" },
-  { name: "Kambu Laddoo", tagline: "Traditional Pearl Millet Ladoo", price: "£13", image: "https://wonderlyf.com/wp-content/uploads/2026/03/01-300x300.png", color: "from-orange-400/10 to-orange-200/5", accent: "#c2710c" },
-  { name: "Meliponini Honey", tagline: "Rare Stingless Bee Honey", price: "£25", image: "/products/9.png", color: "from-emerald-400/10 to-emerald-200/5", accent: "#2d7a4f" },
-  { name: "Moringa Honey", tagline: "Moringa-Infused Wellness Honey", price: "£15", image: "/products/7.png", color: "from-honey/10 to-green-200/5", accent: "#B8860B" },
-  { name: "Paruthipal Mix", tagline: "Cotton Seed Milk Powder", price: "£10", image: "/products/3.png", color: "from-rose-300/10 to-rose-200/5", accent: "#a0522d" },
+  { name: "Forest Honey", slug: "forest-honey", tagline: "Pure Wild Forest Honey", price: "£15", image: "/products/8.png", color: "from-honey/10 to-honey-light/5", accent: "#8B6914" },
+  { name: "Kambu Laddoo", slug: "kambu-laddoo", tagline: "Traditional Pearl Millet Ladoo", price: "£13", image: "https://wonderlyf.com/wp-content/uploads/2026/03/01-300x300.png", color: "from-orange-400/10 to-orange-200/5", accent: "#c2710c" },
+  { name: "Meliponini Honey", slug: "meliponini-honey", tagline: "Rare Stingless Bee Honey", price: "£25", image: "/products/9.png", color: "from-emerald-400/10 to-emerald-200/5", accent: "#2d7a4f" },
+  { name: "Moringa Honey", slug: "moringa-honey", tagline: "Moringa-Infused Wellness Honey", price: "£15", image: "/products/7.png", color: "from-honey/10 to-green-200/5", accent: "#7A5C0E" },
+  { name: "Paruthipal Mix", slug: "paruthipal-mix", tagline: "Cotton Seed Milk Powder", price: "£10", image: "/products/3.png", color: "from-rose-300/10 to-rose-200/5", accent: "#a0522d" },
 ];
 
 export default function ProductShowcase() {
@@ -25,15 +25,35 @@ export default function ProductShowcase() {
 
   return (
     <div ref={ref} className="relative overflow-hidden">
+      {/* Soft radial wash behind the product — radial fades feel natural and
+          avoid the hard diagonal seam that a linear gradient produces when
+          two low-opacity colors meet. */}
       <AnimatePresence mode="wait">
-        <motion.div key={active} className={`absolute inset-0 bg-gradient-to-br ${current.color}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }} />
+        <motion.div
+          key={active}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2 }}
+          style={{
+            background: `radial-gradient(ellipse 80% 70% at 30% 50%, ${current.accent}18 0%, ${current.accent}08 35%, transparent 70%)`,
+          }}
+        />
       </AnimatePresence>
 
       <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center min-h-0 md:min-h-[420px]">
           <div className="relative flex items-center justify-center h-[220px] md:h-[350px]">
-            <motion.div className="absolute w-72 h-72 rounded-full border border-honey/10" animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
-            <motion.div className="absolute w-48 h-48 rounded-full blur-3xl" animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }} transition={{ duration: 3, repeat: Infinity }} style={{ backgroundColor: current.accent + "15" }} />
+            {/* Soft radial glow instead of a hard border ring — looks blended
+                into the background instead of an outlined circle. */}
+            <motion.div
+              className="absolute w-80 h-80 rounded-full blur-2xl"
+              animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.7, 0.5] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              style={{ background: `radial-gradient(circle, ${current.accent}22 0%, ${current.accent}10 45%, transparent 75%)` }}
+            />
+            <motion.div className="absolute w-48 h-48 rounded-full blur-3xl" animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }} transition={{ duration: 3, repeat: Infinity }} style={{ backgroundColor: current.accent + "20" }} />
 
             <AnimatePresence mode="wait">
               <motion.div key={active} className="relative z-10" initial={{ opacity: 0, scale: 0.7, rotateY: -30, y: 30 }} animate={{ opacity: 1, scale: 1, rotateY: 0, y: 0 }} exit={{ opacity: 0, scale: 0.8, rotateY: 30, y: -20 }} transition={{ type: "spring", stiffness: 100, damping: 15 }}>
@@ -44,7 +64,7 @@ export default function ProductShowcase() {
             <AnimatePresence mode="wait">
               <motion.div key={`price-${active}`} className="absolute top-6 right-6 md:right-12 z-20" initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0 }} transition={{ delay: 0.3, type: "spring", stiffness: 200 }}>
                 <div className="bg-white shadow-warm rounded-xl px-4 py-2 text-center border border-honey/10">
-                  <div className="text-[10px] text-warm-light uppercase tracking-wider">From</div>
+                  <div className="text-[11px] text-warm-gray uppercase tracking-wider font-semibold">From</div>
                   <div className="text-lg font-bold" style={{ color: current.accent }}>{current.price}</div>
                 </div>
               </motion.div>
@@ -58,7 +78,7 @@ export default function ProductShowcase() {
                 <h3 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-warm-brown mb-2 md:mb-3">{current.name}</h3>
                 <p className="text-warm-light text-base md:text-lg mb-5 md:mb-8">{current.tagline}</p>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
-                  <Link to="/shop" className="inline-block px-6 md:px-8 py-3 md:py-3 rounded-full font-bold text-white text-base md:text-base transition-all no-underline" style={{ backgroundColor: current.accent }}>
+                  <Link to={`/product/${current.slug}`} className="inline-block px-6 md:px-8 py-3 md:py-3 rounded-full font-bold text-white text-base md:text-base transition-all no-underline" style={{ backgroundColor: current.accent }}>
                     Shop Now
                   </Link>
                 </motion.div>

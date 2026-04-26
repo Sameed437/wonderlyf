@@ -5,11 +5,11 @@ import { Lock, ChevronLeft } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { placeOrder, storeFetch, addToCart as wooAddToCart, clearWooCart, resetCartSession } from "../lib/woo";
 import SEO from "../components/SEO";
+import FloatingElements from "../components/animations/FloatingElements";
 
 const PAYMENT_METHODS = [
   { id: "ppcp-gateway", title: "PayPal", description: "Pay securely with PayPal — you'll be redirected." },
   { id: "paypal", title: "PayPal (legacy)", description: "Legacy PayPal Standard gateway." },
-  { id: "cod", title: "Cash on Delivery", description: "Pay in cash when your order is delivered." },
   { id: "bacs", title: "Direct Bank Transfer", description: "Pay via bank transfer. Details emailed after order." },
 ];
 
@@ -32,7 +32,7 @@ export default function Checkout() {
   const [billing, setBilling] = useState({ ...emptyAddress, email: "" });
   const [shipToSame, setShipToSame] = useState(true);
   const [shipping, setShipping] = useState(emptyAddress);
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState("ppcp-gateway");
   const [availableMethods, setAvailableMethods] = useState(PAYMENT_METHODS);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -43,14 +43,21 @@ export default function Checkout() {
     storeFetch("/checkout")
       .then((data) => {
         if (data?.payment_methods?.length) {
-          const mapped = data.payment_methods.map((m) => ({
-            id: m,
-            title: PAYMENT_METHODS.find((p) => p.id === m)?.title || m,
-            description: PAYMENT_METHODS.find((p) => p.id === m)?.description || "",
-          }));
-          setAvailableMethods(mapped);
-          if (!mapped.find((m) => m.id === paymentMethod)) {
-            setPaymentMethod(mapped[0].id);
+          // Hard-strip Cash on Delivery from the React storefront — even if
+          // the gateway is still enabled in WooCommerce we don't offer it
+          // to online buyers.
+          const mapped = data.payment_methods
+            .filter((m) => m !== "cod")
+            .map((m) => ({
+              id: m,
+              title: PAYMENT_METHODS.find((p) => p.id === m)?.title || m,
+              description: PAYMENT_METHODS.find((p) => p.id === m)?.description || "",
+            }));
+          if (mapped.length) {
+            setAvailableMethods(mapped);
+            if (!mapped.find((m) => m.id === paymentMethod)) {
+              setPaymentMethod(mapped[0].id);
+            }
           }
         }
       })
@@ -168,7 +175,7 @@ export default function Checkout() {
         <div className="max-w-2xl mx-auto px-4 text-center py-20">
           <h1 className="font-serif text-2xl text-warm-brown mb-3">Your cart is empty</h1>
           <p className="text-warm-light mb-6">Add something before you check out.</p>
-          <Link to="/shop" className="inline-flex items-center gap-2 bg-honey text-white px-6 py-3 rounded-full font-bold no-underline text-sm">
+          <Link to="/shop" className="inline-flex items-center gap-2 bg-honey-dark text-white px-6 py-3 rounded-full font-bold no-underline text-sm">
             Start Shopping
           </Link>
         </div>
@@ -180,9 +187,10 @@ export default function Checkout() {
   const total = cartTotal + shipFee;
 
   return (
-    <div className="pt-28 pb-24 bg-cream min-h-screen">
+    <div className="relative overflow-hidden pt-28 pb-24 bg-cream min-h-screen">
       <SEO title="Checkout" description="Complete your Wonderlyf order." canonical="/checkout" />
-      <div className="max-w-5xl mx-auto px-4 md:px-8">
+      <FloatingElements />
+      <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
         <Link to="/cart" className="inline-flex items-center gap-1 text-warm-light text-sm mb-6 no-underline hover:text-honey">
           <ChevronLeft size={16} /> Back to cart
         </Link>
@@ -304,7 +312,7 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-honey text-white py-3.5 rounded-full font-bold hover:bg-honey-dark transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-honey-dark text-white py-3.5 rounded-full font-bold hover:bg-honey-dark transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   "Placing order…"
@@ -317,6 +325,12 @@ export default function Checkout() {
               <p className="text-warm-light text-[11px] text-center mt-3">
                 Secure checkout. By placing your order you agree to our terms.
               </p>
+              <img
+                src="/safe-checkout.png"
+                alt="Guaranteed safe checkout — Visa, Mastercard, American Express, Discover, Stripe, AES-256bit, PayPal"
+                loading="lazy"
+                className="w-full h-auto mt-4"
+              />
             </div>
           </aside>
         </form>

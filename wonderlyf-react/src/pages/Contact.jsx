@@ -35,9 +35,9 @@ export default function Contact() {
             <p className="text-warm-light leading-relaxed mb-8">Whether you want to learn more about our products, have a suggestion, or just want to say hello — reach out to us anytime.</p>
             <div className="space-y-6">
               {[
-                { icon: Mail, label: "Email", value: "info@wonderlyf.com" },
-                { icon: Phone, label: "Phone", value: "+91 63826 63539" },
-                { icon: MapPin, label: "Address", value: "Erode, Tamil Nadu, India" },
+                { icon: Mail, label: "Email", value: "contact@wonderlyf.co.uk" },
+                { icon: Phone, label: "Phone", value: "+44 7396 804524" },
+                { icon: MapPin, label: "Address", value: "167–169 Great Portland Street, 5th Floor, London, W1W 5PF" },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-honey/5 border border-honey/10 flex items-center justify-center flex-shrink-0">
@@ -76,7 +76,7 @@ export default function Contact() {
                 <textarea required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className="w-full bg-cream border border-honey/10 rounded-xl px-4 py-3 text-sm text-warm-brown placeholder-warm-light/40 outline-none focus:border-honey/30 transition-colors resize-none" placeholder="Tell us more..." />
               </div>
-              <button type="submit" className="w-full flex items-center justify-center gap-2 bg-honey text-white py-3.5 rounded-full font-bold hover:bg-honey-dark transition-all duration-300">
+              <button type="submit" className="w-full flex items-center justify-center gap-2 bg-honey-dark text-white py-3.5 rounded-full font-bold hover:bg-honey-dark transition-all duration-300">
                 {submitted ? "Message Sent!" : <><Send size={16} /> Send Message</>}
               </button>
             </form>

@@ -309,3 +309,22 @@ add_action( 'template_redirect', function () {
         . '?key=' . rawurlencode( $key ) );
     exit;
 }, 5 );
+
+// ── Redirect anyone who lands on api.wonderlyf.co.uk in a browser ────────
+// This is the headless backend — real visitors belong on the React
+// storefront. We only redirect frontend page loads; REST (/wp-json/),
+// admin, login, AJAX, cron, and uploaded media are left alone so the
+// storefront, editors, and PageSpeed crawlers keep working.
+add_action( 'template_redirect', function () {
+    if ( wp_doing_ajax() || wp_doing_cron() ) return;
+    if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) return;
+    if ( is_admin() ) return;
+
+    // Leave checkout / order-received pages to the handlers above.
+    if ( function_exists( 'is_checkout' ) && is_checkout() ) return;
+    if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) return;
+
+    // Any other frontend request → shop page on the React site.
+    wp_redirect( trailingslashit( WONDERLYF_FRONTEND_URL ) . 'shop', 301 );
+    exit;
+}, 1 );

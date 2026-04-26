@@ -8,6 +8,7 @@ const navLinks = [
   { name: "Home", path: "/" },
   { name: "Shop", path: "/shop" },
   { name: "Our Story", path: "/about" },
+  { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -31,8 +32,8 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-warm py-3"
-          : "bg-transparent py-5"
+          ? "bg-white/90 backdrop-blur-md shadow-warm py-1.5"
+          : "bg-transparent py-2"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
@@ -40,7 +41,11 @@ export default function Navbar() {
           <img
             src="https://wonderlyf.com/wp-content/uploads/2026/01/Logo_Wonderlyf-1.png"
             alt="Wonderlyf"
-            className="h-10"
+            className="h-10 w-auto"
+            width="120"
+            height="40"
+            fetchPriority="high"
+            decoding="async"
           />
         </Link>
 
@@ -63,9 +68,10 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <Link
             to="/cart"
+            aria-label="View cart"
             className="relative p-2 text-warm-gray hover:text-honey transition-colors"
           >
-            <ShoppingCart size={20} />
+            <ShoppingCart size={20} aria-hidden="true" />
             <AnimatePresence>
               {cartCount > 0 && (
                 <motion.span
@@ -73,7 +79,7 @@ export default function Navbar() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-0.5 -right-0.5 bg-honey text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                  className="absolute -top-0.5 -right-0.5 bg-honey-dark text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
                 >
                   {cartCount > 99 ? "99+" : cartCount}
                 </motion.span>
@@ -81,16 +87,20 @@ export default function Navbar() {
             </AnimatePresence>
           </Link>
           <button
+            type="button"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls="primary-mobile-menu"
             className="md:hidden p-2 text-warm-brown"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </div>
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-white shadow-warm-lg mt-2 mx-4 rounded-2xl p-6">
+        <div id="primary-mobile-menu" className="md:hidden bg-white shadow-warm-lg mt-2 mx-4 rounded-2xl p-6">
           {navLinks.map((link) => (
             <Link
               key={link.name}

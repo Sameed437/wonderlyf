@@ -546,20 +546,8 @@ export const honeyProcessStages = [
   },
   {
     step: 3,
-    title: "Pouring",
-    subtitle: "liquid gold...",
-    description: "Pure, unprocessed goodness flows into its vessel, preserving every natural nutrient.",
-  },
-  {
-    step: 4,
-    title: "The Finishing",
-    subtitle: "touch...",
-    description: "Quality checked and FSSAI certified to ensure freshness and purity.",
-  },
-  {
-    step: 5,
-    title: "Wrapping",
-    subtitle: "with heritage...",
-    description: "Packaged with sustainable materials, ready to bring nature's goodness to your doorstep.",
+    title: "Delivered",
+    subtitle: "to your doorstep...",
+    description: "Quality checked, FSSAI certified, and packaged with sustainable materials — ready to bring nature's goodness home.",
   },
 ];

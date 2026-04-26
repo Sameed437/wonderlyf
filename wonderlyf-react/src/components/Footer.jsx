@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone } from "lucide-react";
+import FloatingElements from "./animations/FloatingElements";
 
 export default function Footer() {
   return (
-    <footer className="bg-warm-brown text-cream-dark">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-16">
+    <footer className="relative overflow-hidden bg-warm-brown text-cream-dark">
+      <FloatingElements />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
           <div>
             <h3 className="text-lg font-bold text-honey-light mb-4">WONDERLYF</h3>
-            <p className="text-cream-dark/60 text-sm leading-relaxed">
+            <p className="text-cream-dark/90 text-sm leading-relaxed">
               Traditional Indian wellness products crafted with ancient wisdom
               and modern purity. From our kitchen to yours.
             </p>
@@ -55,25 +57,26 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 text-cream-dark/50 text-sm">
                 <Mail size={14} className="text-honey-light/60" />
-                info@wonderlyf.com
+                contact@wonderlyf.co.uk
               </div>
               <div className="flex items-center gap-2 text-cream-dark/50 text-sm">
                 <Phone size={14} className="text-honey-light/60" />
-                +91 63826 63539
+                +447396804524
               </div>
               <div className="flex items-center gap-2 text-cream-dark/50 text-sm">
                 <MapPin size={14} className="text-honey-light/60" />
-                Erode, Tamil Nadu, India
+                167 - 169 Great Portland Street 
+                5th Floor, London, W1W 5PF
               </div>
             </div>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-cream-dark/30 text-xs">
+          <p className="text-cream-dark/80 text-xs">
             &copy; 2026 Wonderlyf. All rights reserved.
           </p>
-          <p className="text-cream-dark/30 text-xs">
+          <p className="text-cream-dark/80 text-xs">
             Pure. Natural. Wonderlyf.
           </p>
         </div>

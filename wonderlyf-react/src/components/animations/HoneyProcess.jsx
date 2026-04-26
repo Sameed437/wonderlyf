@@ -7,14 +7,12 @@ export default function HoneyProcess() {
   const [activeStage, setActiveStage] = useState(0);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
 
-  useMotionValueEvent(scrollYProgress, "change", (v) => setActiveStage(Math.min(Math.floor(v * 5), 4)));
+  useMotionValueEvent(scrollYProgress, "change", (v) => setActiveStage(Math.min(Math.floor(v * 3), 2)));
 
-  const stage1Opacity = useTransform(scrollYProgress, [0, 0.04, 0.14, 0.2], [0, 1, 1, 0]);
-  const stage2Opacity = useTransform(scrollYProgress, [0.18, 0.24, 0.34, 0.4], [0, 1, 1, 0]);
-  const stage3Opacity = useTransform(scrollYProgress, [0.38, 0.44, 0.54, 0.6], [0, 1, 1, 0]);
-  const stage4Opacity = useTransform(scrollYProgress, [0.58, 0.64, 0.74, 0.8], [0, 1, 1, 0]);
-  const stage5Opacity = useTransform(scrollYProgress, [0.78, 0.84, 0.94, 1], [0, 1, 1, 1]);
-  const stageOpacities = [stage1Opacity, stage2Opacity, stage3Opacity, stage4Opacity, stage5Opacity];
+  const stage1Opacity = useTransform(scrollYProgress, [0, 0.05, 0.28, 0.36], [0, 1, 1, 0]);
+  const stage2Opacity = useTransform(scrollYProgress, [0.34, 0.42, 0.62, 0.7], [0, 1, 1, 0]);
+  const stage3Opacity = useTransform(scrollYProgress, [0.68, 0.76, 0.95, 1], [0, 1, 1, 1]);
+  const stageOpacities = [stage1Opacity, stage2Opacity, stage3Opacity];
 
   const jarOutline = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
   const honeyFill = useTransform(scrollYProgress, [0.4, 0.6], [260, 130]);
@@ -40,13 +38,13 @@ export default function HoneyProcess() {
   return (
     <>
       {/* ─── DESKTOP: Scroll-pinned ─── */}
-      <div ref={containerRef} className="relative hidden md:block" style={{ height: "500vh" }}>
+      <div ref={containerRef} className="relative hidden md:block" style={{ height: "150vh" }}>
         <div className="sticky top-0 h-screen flex items-center overflow-hidden bg-cream">
           <div className="max-w-7xl mx-auto px-8 w-full grid grid-cols-2 gap-16 items-center">
             <div className="relative">
               {honeyProcessStages.map((stage, i) => (
                 <motion.div key={stage.step} className="absolute inset-0 flex flex-col justify-center" style={{ opacity: stageOpacities[i] }}>
-                  <div className="text-honey/50 text-xs tracking-[0.3em] uppercase mb-3">Step {stage.step} of 5</div>
+                  <div className="text-honey/50 text-xs tracking-[0.3em] uppercase mb-3">Step {stage.step} of 3</div>
                   <h3 className="font-serif text-4xl lg:text-5xl font-bold mb-2 text-warm-brown">{stage.title}</h3>
                   <p className="text-warm-light text-xl italic mb-4">{stage.subtitle}</p>
                   <p className="text-warm-light/70 text-base leading-relaxed max-w-md">{stage.description}</p>

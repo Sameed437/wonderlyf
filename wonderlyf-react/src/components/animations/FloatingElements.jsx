@@ -113,7 +113,7 @@ export default function FloatingElements() {
   if (prefersReduced) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 5 }}>
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 5 }}>
       {elements.map((el) => {
         const Shape = shapeComponents[el.shape];
         return (

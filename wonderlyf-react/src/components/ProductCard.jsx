@@ -53,7 +53,7 @@ export default function ProductCard({ product, index = 0 }) {
               initial={{ opacity: 0, scale: 0.6, x: -10 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.1, type: "spring", stiffness: 200 }}
-              className="absolute top-2 left-2 bg-honey text-white text-xs font-bold px-2.5 py-0.5 rounded-full"
+              className="absolute top-2 left-2 bg-honey-dark text-white text-xs font-bold px-2.5 py-0.5 rounded-full"
             >
               {product.badge}
             </motion.span>

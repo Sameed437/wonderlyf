@@ -41,16 +41,20 @@ export default function CategoryCarousel({ categories }) {
   return (
     <div className="relative">
       <button
+        type="button"
+        aria-label="Previous categories"
         onClick={prev}
-        className="absolute left-1 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/90 shadow-warm flex items-center justify-center text-warm-gray hover:text-honey transition-all"
+        className="absolute left-1 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-10 md:h-10 rounded-full bg-white/90 shadow-warm flex items-center justify-center text-warm-gray hover:text-honey transition-all"
       >
-        <ChevronLeft size={20} />
+        <ChevronLeft size={20} aria-hidden="true" />
       </button>
       <button
+        type="button"
+        aria-label="Next categories"
         onClick={next}
-        className="absolute right-1 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/90 shadow-warm flex items-center justify-center text-warm-gray hover:text-honey transition-all"
+        className="absolute right-1 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-10 md:h-10 rounded-full bg-white/90 shadow-warm flex items-center justify-center text-warm-gray hover:text-honey transition-all"
       >
-        <ChevronRight size={20} />
+        <ChevronRight size={20} aria-hidden="true" />
       </button>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 overflow-hidden">
@@ -86,15 +90,23 @@ export default function CategoryCarousel({ categories }) {
         </AnimatePresence>
       </div>
 
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Category slides">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}
+            type="button"
+            role="tab"
+            aria-selected={i === current}
+            aria-label={`Go to slide ${i + 1}`}
             onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === current ? "bg-honey w-6" : "bg-warm-brown/15 hover:bg-warm-brown/30"
-            }`}
-          />
+            className="relative p-3 -m-2 group"
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
+                i === current ? "bg-honey w-6 h-2" : "bg-warm-brown/30 group-hover:bg-warm-brown/50 w-2 h-2"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>

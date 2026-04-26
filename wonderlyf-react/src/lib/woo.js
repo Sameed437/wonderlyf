@@ -232,6 +232,7 @@ export function mapProduct(p) {
     price: Number(p.price) || 0,
     originalPrice: Number(p.regular_price || p.price) || 0,
     image: p.images?.[0]?.src || "",
+    images: (p.images || []).map((img) => img.src).filter(Boolean),
     description: stripHtml(p.short_description),
     longDescription: stripHtml(p.description),
     rating: Number(p.average_rating) || 0,

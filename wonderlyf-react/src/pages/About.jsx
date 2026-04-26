@@ -76,8 +76,8 @@ export default function About() {
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-honey-light mb-4">Join Our Journey</h2>
-            <p className="text-cream-dark/60 mb-8">Experience the magic of traditional wellness. Every purchase supports organic farmers and sustainable practices.</p>
-            <Link to="/shop" className="inline-flex items-center gap-2 bg-honey text-white px-8 py-3.5 rounded-full font-bold hover:bg-honey-light hover:text-warm-brown transition-all no-underline">
+            <p className="text-cream-dark/90 mb-8">Experience the magic of traditional wellness. Every purchase supports organic farmers and sustainable practices.</p>
+            <Link to="/shop" className="inline-flex items-center gap-2 bg-honey-dark text-white px-8 py-3.5 rounded-full font-bold hover:bg-honey-light hover:text-warm-brown transition-all no-underline">
               Explore Products <ArrowRight size={18} />
             </Link>
           </motion.div>

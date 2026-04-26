@@ -39,10 +39,10 @@ export default function ProductJourney() {
   const stepOpacities = [step1, step2, step3, step4, step5];
 
   return (
-    <div ref={containerRef} className="relative py-12">
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-        <p className="text-honey text-sm tracking-widest uppercase mb-3 font-medium">The Making Of</p>
-        <h2 className="font-serif text-3xl md:text-5xl font-bold text-warm-brown mb-4">Our Forest Honey</h2>
+    <div ref={containerRef} className="relative py-2 md:py-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-6 md:mb-8">
+        <p className="text-honey text-sm tracking-widest uppercase mb-2 font-medium">The Making Of</p>
+        <h2 className="font-serif text-3xl md:text-5xl font-bold text-warm-brown mb-3">Our Forest Honey</h2>
         <p className="text-warm-light max-w-xl mx-auto">Watch how nature's golden elixir transforms from wild forests to your kitchen table.</p>
       </motion.div>
 
@@ -93,9 +93,9 @@ export default function ProductJourney() {
                   <motion.span className="text-xs font-bold" style={{ color: useTransform(stepOpacities[i], [0.3,1], ["rgba(44,24,16,0.2)","#D4940A"]) }}>{i+1}</motion.span>
                 </motion.div>
                 <div>
-                  <p className="text-honey/60 text-[10px] tracking-[0.2em] uppercase mb-0.5">{step.label}</p>
-                  <h4 className="text-warm-brown font-semibold text-sm mb-1">{step.title}</h4>
-                  <p className="text-warm-light text-xs leading-relaxed">{step.description}</p>
+                  <p className="text-honey-dark text-[11px] tracking-[0.2em] uppercase mb-0.5 font-medium">{step.label}</p>
+                  <h3 className="text-warm-brown font-semibold text-sm mb-1">{step.title}</h3>
+                  <p className="text-warm-gray text-xs leading-relaxed">{step.description}</p>
                 </div>
               </motion.div>
             ))}

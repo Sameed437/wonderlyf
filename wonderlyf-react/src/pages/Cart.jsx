@@ -26,7 +26,7 @@ export default function Cart() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
             <ShoppingBag size={48} className="mx-auto text-warm-brown/10 mb-4" />
             <p className="text-warm-light mb-6">Your cart is empty</p>
-            <Link to="/shop" className="inline-flex items-center gap-2 bg-honey text-white px-8 py-3 rounded-full font-bold no-underline">Start Shopping <ArrowRight size={16} /></Link>
+            <Link to="/shop" className="inline-flex items-center gap-2 bg-honey-dark text-white px-8 py-3 rounded-full font-bold no-underline">Start Shopping <ArrowRight size={16} /></Link>
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
@@ -64,7 +64,7 @@ export default function Cart() {
                   {shipping > 0 && <p className="text-honey text-xs">Free shipping on orders above £30</p>}
                   <div className="border-t border-honey/10 pt-3 flex justify-between"><span className="text-warm-brown font-semibold">Total</span><span className="text-honey-dark font-bold text-lg">£{total.toFixed(2)}</span></div>
                 </div>
-                <Link to="/checkout" className="block w-full text-center bg-honey text-white py-3.5 rounded-full font-bold hover:bg-honey-dark transition-all no-underline">Proceed to Checkout</Link>
+                <Link to="/checkout" className="block w-full text-center bg-honey-dark text-white py-3.5 rounded-full font-bold hover:bg-honey-dark transition-all no-underline">Proceed to Checkout</Link>
                 <Link to="/shop" className="block text-center text-warm-light text-sm mt-4 hover:text-honey transition-colors no-underline">Continue Shopping</Link>
               </div>
             </div>

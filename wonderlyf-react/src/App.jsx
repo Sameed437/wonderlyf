@@ -8,7 +8,6 @@ function ScrollToTop() {
 }
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import FloatingElements from "./components/animations/FloatingElements";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
@@ -17,12 +16,13 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import ProductDetail from "./pages/ProductDetail";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 export default function App() {
   return (
     <div className="min-h-screen bg-cream overflow-x-clip">
       <ScrollToTop />
-      <FloatingElements />
       <Navbar />
       <main>
         <Routes>
@@ -34,6 +34,8 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order/:id" element={<OrderConfirmation />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
       </main>
       <Footer />

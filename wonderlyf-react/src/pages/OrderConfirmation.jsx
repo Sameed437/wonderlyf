@@ -135,7 +135,7 @@ export default function OrderConfirmation() {
         <div className="text-center mt-8">
           <Link
             to="/shop"
-            className="inline-flex items-center gap-2 bg-honey text-white px-8 py-3 rounded-full font-bold no-underline text-sm hover:bg-honey-dark transition-all"
+            className="inline-flex items-center gap-2 bg-honey-dark text-white px-8 py-3 rounded-full font-bold no-underline text-sm hover:bg-honey-dark transition-all"
           >
             Continue Shopping <ArrowRight size={16} />
           </Link>
